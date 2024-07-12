@@ -36,3 +36,4 @@ jspm_packages/
 # Windows metadata
 Thumbs.db
 ehthumbs.db
+.vercel
