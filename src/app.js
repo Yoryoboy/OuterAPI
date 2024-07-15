@@ -23,3 +23,5 @@ app.use("/webhook", webhookRoutes);
 app.listen(port, () => {
   console.log(`Servidor ejecutándose en http://localhost:${port}`);
 });
+
+export default app;
