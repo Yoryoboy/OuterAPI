@@ -1,13 +1,16 @@
 import axios from "axios";
 import dotenv from "dotenv";
 
+import { getContractorListId } from "./helperFunctions.js";
+
 dotenv.config();
 
 const apiKey = process.env.API_KEY;
 
 export async function removeTaskFromList(task, oldContractor) {
-  const { name, listId } = oldContractor;
+  const { name } = oldContractor;
   const { user, taskId } = task;
+  const listId = getContractorListId(task, oldContractor);
 
   try {
     const response = await axios.delete(
@@ -45,9 +48,9 @@ export async function removeTaskFromList(task, oldContractor) {
 }
 
 export async function addTaskToList(task, newContractor) {
-  const { name, listId } = newContractor;
+  const { name } = newContractor;
   const { user, taskId } = task;
-
+  const listId = getContractorListId(task, newContractor);
   try {
     const response = await axios.post(
       `https://api.clickup.com/api/v2/list/${listId}/task/${taskId}`,
