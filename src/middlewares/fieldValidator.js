@@ -14,9 +14,8 @@ export function validateField(req, res, next) {
       });
     }
   } catch (error) {
-    console.error("Error detected with incoming data", req.body, error);
     res.status(204).json({
-      message: "Invalid request",
+      message: "Invalid data in body",
     });
   }
 }
