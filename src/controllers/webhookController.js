@@ -1,4 +1,7 @@
-import { handleMovingTaskToContractor } from "../services/webhookService.js";
+import {
+  handleMovingTaskToContractor,
+  updateRoundedMiles,
+} from "../services/webhookService.js";
 
 export function add_to_contractor_list(req, res) {
   const historyItems = req.body.history_items[0];
@@ -21,23 +24,29 @@ export function add_to_contractor_list(req, res) {
 }
 
 export function updateRoundedMilesCustomField(req, res) {
-  const { asbuilt_miles, design_miles, task_id } = req.query;
   try {
+    const { asbuilt_miles, design_miles, task_id, action } = req.query;
     if (asbuilt_miles) {
-      res.json({
+      updateRoundedMiles(asbuilt_miles, task_id, action);
+      res.status(200).json({
         stage: "updateRoundedMilesCustomField",
-        message: "Valid data",
-        asbuiltMiles: asbuilt_miles,
-        designMiles: design_miles,
-        taskId: task_id,
+        message: "Asbuilt miles updated",
+      });
+    } else if (design_miles) {
+      updateRoundedMiles(design_miles, task_id, action);
+      res.status(200).json({
+        stage: "updateRoundedMilesCustomField",
+        message: "Asbuilt miles updated",
       });
     } else {
       res.status(204).json({
-        message: "Invalid data",
+        stage: "updateRoundedMilesCustomField",
+        message: "No asbuilt or design miles found in query",
       });
     }
   } catch (error) {
     res.json({
+      stage: "updateRoundedMilesCustomField",
       message: "Invalid data",
     });
   }

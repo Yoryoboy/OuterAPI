@@ -1,4 +1,9 @@
-import { addTaskToList, removeTaskFromList } from "../utils/clickUpApi.js";
+import {
+  addTaskToList,
+  removeTaskFromList,
+  updateAsbuiltMiles,
+  updateDesignMiles,
+} from "../utils/clickUpApi.js";
 import { contractorKingCustomField } from "../config/contractors.js";
 
 function findContractorById(contractorId) {
@@ -17,5 +22,21 @@ export async function handleMovingTaskToContractor(task) {
   }
   if (task.after) {
     await addTaskToList(task, newContractor);
+  }
+}
+
+export async function updateRoundedMiles(miles, taskId, action) {
+  try {
+    if (action === "asbuilt") {
+      await updateAsbuiltMiles(miles, taskId);
+    } else if (action === "design") {
+      await updateDesignMiles(miles, taskId);
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({
+      stage: "updateRoundedMiles",
+      message: "There was an error updating the miles",
+    });
   }
 }
