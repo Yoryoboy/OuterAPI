@@ -39,13 +39,13 @@ export function updateRoundedMilesCustomField(req, res) {
         message: "Asbuilt miles updated",
       });
     } else {
-      res.status(204).json({
+      res.json({
         stage: "updateRoundedMilesCustomField",
         message: "No asbuilt or design miles found in query",
       });
     }
   } catch (error) {
-    res.json({
+    res.status(500).json({
       stage: "updateRoundedMilesCustomField",
       message: "Invalid data",
     });

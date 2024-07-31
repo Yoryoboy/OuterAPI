@@ -38,10 +38,6 @@ export async function updateAsbuiltMiles(miles, taskId) {
     id: "d281788f-5911-4954-82db-3616de342644",
     name: "ASBUILT ROUNDED MILES",
     type: "number",
-    type_config: {},
-    date_created: "1722442786414",
-    hide_from_guests: false,
-    required: false,
   };
 
   const teamId = CCI_HS_LIST.team.id;
@@ -53,9 +49,17 @@ export async function updateAsbuiltMiles(miles, taskId) {
   const body = JSON.stringify({ value: miles });
   const url = `https://api.clickup.com/api/v2/task/${taskId}/field/${fieldId}?${query}`;
 
-  const response = await makeAxiosRequest("post", url, body);
-  if (response) {
-    console.log(`Se han actualizado las millas asbuilt de la tarea ${taskId}`);
+  try {
+    const response = await makeAxiosRequest("post", url, body);
+    if (response) {
+      console.log(
+        `Se han actualizado las millas asbuilt de la tarea ${taskId}`
+      );
+    } else {
+      console.error("Error al actualizar las millas asbuilt", error);
+    }
+  } catch (error) {
+    console.error("Error al actualizar las millas asbuilt", error);
   }
 }
 
@@ -64,10 +68,6 @@ export async function updateDesignMiles(miles, taskId) {
     id: "e1edd040-64af-4036-8012-9b9c29fc5f11",
     name: "DESIGN ROUNDED MILES",
     type: "number",
-    type_config: {},
-    date_created: "1722442806835",
-    hide_from_guests: false,
-    required: false,
   };
 
   const teamId = CCI_HS_LIST.team.id;
@@ -79,8 +79,14 @@ export async function updateDesignMiles(miles, taskId) {
   const body = JSON.stringify({ value: miles });
   const url = `https://api.clickup.com/api/v2/task/${taskId}/field/${fieldId}?${query}`;
 
-  const response = await makeAxiosRequest("post", url, body);
-  if (response) {
-    console.log(`Se han actualizado las millas asbuilt de la tarea ${taskId}`);
+  try {
+    const response = await makeAxiosRequest("post", url, body);
+    if (response) {
+      console.log(`Se han actualizado las millas diseño de la tarea ${taskId}`);
+    } else {
+      console.error("Error al actualizar las millas diseño", error);
+    }
+  } catch (error) {
+    console.error("Error al actualizar las millas diseño", error);
   }
 }

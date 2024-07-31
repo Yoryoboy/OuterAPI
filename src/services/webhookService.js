@@ -33,10 +33,6 @@ export async function updateRoundedMiles(miles, taskId, action) {
       await updateDesignMiles(miles, taskId);
     }
   } catch (error) {
-    console.log(error);
-    res.json({
-      stage: "updateRoundedMiles",
-      message: "There was an error updating the miles",
-    });
+    console.error("Error updating miles", error);
   }
 }
