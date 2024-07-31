@@ -26,13 +26,13 @@ export function add_to_contractor_list(req, res) {
 export function updateRoundedMilesCustomField(req, res) {
   try {
     const { asbuilt_miles, design_miles, task_id, action } = req.query;
-    if (asbuilt_miles) {
+    if (action === "asbuilt") {
       updateRoundedMiles(asbuilt_miles, task_id, action);
       res.status(200).json({
         stage: "updateRoundedMilesCustomField",
         message: "Asbuilt miles updated",
       });
-    } else if (design_miles) {
+    } else if (action === "design") {
       updateRoundedMiles(design_miles, task_id, action);
       res.status(200).json({
         stage: "updateRoundedMilesCustomField",
