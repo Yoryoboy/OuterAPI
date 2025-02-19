@@ -31,6 +31,7 @@ export async function updateRoundedMiles(miles, taskId, action) {
       await updateAsbuiltMiles(miles, taskId);
     } else if (action === "design") {
       await updateDesignMiles(miles, taskId);
+      await updateAsbuiltMiles(miles, taskId); // agregado en el nuevo update. Solo se setean las millas cuando se envia el design y tiene que concordar con las asbuilt miles.
     }
   } catch (error) {
     console.error("Error updating miles", error);
