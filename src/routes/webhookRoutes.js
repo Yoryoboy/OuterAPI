@@ -20,4 +20,6 @@ router.post(
   updateRoundedMilesCustomField
 );
 
+router.post("/cci/validate_sent_task");
+
 export default router;

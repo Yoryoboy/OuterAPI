@@ -1,11 +1,8 @@
 import express, { json } from "express";
-import dotenv from "dotenv";
 import webhookRoutes from "./routes/webhookRoutes.js";
-
-dotenv.config();
+import { port } from "./config/config.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(json());
 
