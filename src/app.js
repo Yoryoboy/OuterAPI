@@ -4,7 +4,7 @@ import { port } from "./config/config.js";
 
 const app = express();
 
-app.use(json());
+app.use(json({ limit: "5mb" }));
 
 app.get("/", (req, res) => {
   res.json({

@@ -33,3 +33,17 @@ export function validateCciMiles(req, res, next) {
     });
   }
 }
+
+export function validateSentTask(req, res, next) {
+  try {
+    const { date, payload } = req.body;
+    const { id, name, assignees, custom_fields } = payload;
+    console.log(date, id, name, assignees, custom_fields[0]);
+    res.status(200).json({
+      stage: "validateSentTask",
+      message: "Task validated",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -4,7 +4,10 @@ import {
   updateRoundedMilesCustomField,
 } from "../controllers/webhookController.js";
 import { validateField } from "../middlewares/fieldValidator.js";
-import { validateCciMiles } from "../middlewares/validateCciMiles.js";
+import {
+  validateCciMiles,
+  validateSentTask,
+} from "../middlewares/validateCciMiles.js";
 
 const router = Router();
 
@@ -20,6 +23,6 @@ router.post(
   updateRoundedMilesCustomField
 );
 
-router.post("/cci/validate_sent_task");
+router.post("/cci/validate_sent_task", validateSentTask);
 
 export default router;
