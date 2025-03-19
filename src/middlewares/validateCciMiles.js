@@ -45,6 +45,11 @@ export function validateSentTask(req, res, next) {
     const isAnyCodeValueZero = codes.some((code) => code.value === 0);
 
     if (codes.length === 0 || isAnyCodeValueZero) {
+      console.log(
+        `Task name: ${name}, codes not found. Sending email to ${users.join(
+          ", "
+        )}`
+      );
       const task = {
         date: new Date(date).toLocaleDateString(),
         id,
