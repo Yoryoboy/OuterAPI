@@ -1,3 +1,4 @@
+import { defaultUser } from "../config/config.js";
 import { sendEmail } from "../services/emailService.js";
 import {
   handleMovingTaskToContractor,
@@ -58,7 +59,7 @@ export async function sendNoCodesEmail(req, res) {
   try {
     const { date, id, name, users, codes } = req.body.task;
 
-    const to = `${users.join(", ")}, jdiaz@irazutechnology.com`;
+    const to = `${users.join(", ")}, ${defaultUser}`;
     const emailBody = getNoCodesEmail(id, name, date, users, codes);
     const subject = `Tarea sin códigos: ${name}`;
 
