@@ -1,18 +1,32 @@
 export const getNoCodesEmail = (id, name, date, users, codes) => `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0px 2px 10px rgba(0,0,0,0.1);">
+  <div style="font-family: Arial, sans-serif; max-width: 480px; width: 90%; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0px 2px 10px rgba(0,0,0,0.1);">
     <h2 style="color: #333; text-align: center;">🔔 Notificación de Tarea</h2>
     <p>Hola,</p>
     <p>La tarea <strong>${name}</strong> (<strong>ID: ${id}</strong>) fue movida al estado:</p>
 
-    <div style="background-color: #4466ff; color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
-      SENT
-    </div>
+    <div style="background-color: #4466ff; 
+            color: white; 
+            padding: 5px 15px; 
+            border-radius: 8px; 
+            text-align: center; 
+            font-weight: bold;
+            display: inline-block;
+            max-width: 200px;">
+  SENT
+</div>
 
     <p>Sin embargo, esta tarea no tiene códigos asociados, por lo que ha sido automáticamente devuelta al estado:</p>
 
-    <div style="background-color: #b660e0; color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
-      READY TO SEND
-    </div>
+    <div style="background-color: #b660e0; 
+            color: white; 
+            padding: 5px 15px; 
+            border-radius: 8px; 
+            text-align: center; 
+            font-weight: bold;
+            display: inline-block;
+            max-width: 200px;">
+  READY TO SEND
+</div>
 
     <p>Por favor, revisa la tarea y añade el código correspondiente antes de volver a marcarla como <strong>enviada</strong>.</p>
 
@@ -35,6 +49,6 @@ export const getNoCodesEmail = (id, name, date, users, codes) => `
     </p>
 
     <p>Gracias.</p>
-    <p><strong>Equipo de ClickUp</strong></p>
+    <p><strong>Irazu Technology</strong></p>
   </div>
 `;
