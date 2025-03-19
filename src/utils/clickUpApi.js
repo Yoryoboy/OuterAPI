@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { getContractorListId } from "./helperFunctions.js";
 import { makeAxiosRequest } from "./axiosHelpers.js";
 import { CCI_HS_LIST } from "../config/listsDetails.js";
+import { apiKey } from "../config/config.js";
 
 dotenv.config();
 
@@ -88,5 +89,26 @@ export async function updateDesignMiles(miles, taskId) {
     }
   } catch (error) {
     console.error("Error al actualizar las millas diseño", error);
+  }
+}
+export async function updateTask(taskId, body) {
+  const options = {
+    method: "PUT",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      Authorization: apiKey,
+    },
+    body: JSON.stringify(body),
+  };
+
+  const url = `https://api.clickup.com/api/v2/task/${taskId}`;
+
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating task status:", error);
   }
 }

@@ -5,6 +5,7 @@ import {
   updateRoundedMiles,
 } from "../services/webhookService.js";
 import { getNoCodesEmail } from "../templates/emailTemplates.js";
+import { updateTask } from "../utils/clickUpApi.js";
 
 export function add_to_contractor_list(req, res) {
   const historyItems = req.body.history_items[0];
@@ -62,6 +63,8 @@ export async function sendNoCodesEmail(req, res) {
     const to = `${users.join(", ")}, ${defaultUser}`;
     const emailBody = getNoCodesEmail(id, name, date, users, codes);
     const subject = `Tarea sin códigos: ${name}`;
+
+    await updateTask(id, { status: "ready to send" });
 
     await sendEmail(to, subject, emailBody);
 
