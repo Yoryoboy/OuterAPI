@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   add_to_contractor_list,
   updateRoundedMilesCustomField,
+  sendNoCodesEmail,
 } from "../controllers/webhookController.js";
 import { validateField } from "../middlewares/fieldValidator.js";
 import {
@@ -23,6 +24,6 @@ router.post(
   updateRoundedMilesCustomField
 );
 
-router.post("/cci/validate_sent_task", validateSentTask);
+router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 
 export default router;

@@ -1,7 +1,9 @@
+import { sendEmail } from "../services/emailService.js";
 import {
   handleMovingTaskToContractor,
   updateRoundedMiles,
 } from "../services/webhookService.js";
+import { getNoCodesEmail } from "../templates/emailTemplates.js";
 
 export function add_to_contractor_list(req, res) {
   const historyItems = req.body.history_items[0];
@@ -48,6 +50,30 @@ export function updateRoundedMilesCustomField(req, res) {
     res.status(500).json({
       stage: "updateRoundedMilesCustomField",
       message: "Invalid data",
+    });
+  }
+}
+
+export async function sendNoCodesEmail(req, res) {
+  try {
+    const { date, id, name, users, codes } = req.body.task;
+
+    const to = `${users.join(", ")}, jdiaz@irazutechnology.com`;
+    const emailBody = getNoCodesEmail(id, name, date, users, codes);
+    const subject = `Tarea sin códigos: ${name}`;
+
+    await sendEmail(to, subject, emailBody);
+
+    return res.status(204).json({
+      stage: "sendNoCodesEmail",
+      message: "Email sent",
+    });
+  } catch (error) {
+    console.error("❌ Error al enviar el email:", error);
+    return res.status(500).json({
+      stage: "sendNoCodesEmail",
+      message: "Error al enviar el email",
+      error: error.message,
     });
   }
 }
