@@ -13,6 +13,7 @@ export function handleAxiosError(error) {
 }
 
 export async function makeAxiosRequest(method, url, data = {}) {
+  console.log(url, data);
   try {
     const response = await axios({
       method,

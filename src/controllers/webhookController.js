@@ -89,11 +89,6 @@ export async function addQcPointsFromDesignPoints(req, res) {
 
   try {
     await addQcPoints(task_id, qcPoints);
-    res.status(200).json({
-      stage: "addQcPointsFromDesignPoints",
-      message: "Qc points added",
-    });
-    console.log(`Qc points added to task ${task_id}`);
   } catch (error) {
     console.error("Error adding qc points", error);
     res.status(500).json({

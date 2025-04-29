@@ -117,8 +117,8 @@ export async function updateTask(taskId, body) {
 
 export async function addQcPoints(taskId, qcPoints) {
   const customField = {
-    id: "cb50c3de-e9b0-4e1f-b9a7-7dc792192704",
-    name: "DESIGN POINTS",
+    id: "9ac8d58a-d1ae-46f6-8c29-6d49a63340de",
+    name: "QC POINTS",
   };
 
   const fieldId = customField.id;
@@ -129,7 +129,6 @@ export async function addQcPoints(taskId, qcPoints) {
     const response = await makeAxiosRequest("post", url, body);
     if (response) {
       console.log(`Se han actualizado los puntos de QC de la tarea ${taskId}`);
-      return response;
     } else {
       console.error("Error al actualizar los puntos de QC");
     }
