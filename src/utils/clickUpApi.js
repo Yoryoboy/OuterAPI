@@ -6,6 +6,8 @@ import { apiKey } from "../config/config.js";
 
 dotenv.config();
 
+const teamId = CCI_HS_LIST.team.id;
+
 export async function removeTaskFromList(task, oldContractor) {
   const { name } = oldContractor;
   const { user, taskId } = task;
@@ -71,7 +73,6 @@ export async function updateDesignMiles(miles, taskId) {
     type: "number",
   };
 
-  const teamId = CCI_HS_LIST.team.id;
   const fieldId = customField.id;
   const query = new URLSearchParams({
     custom_task_ids: "true",
@@ -91,6 +92,7 @@ export async function updateDesignMiles(miles, taskId) {
     console.error("Error al actualizar las millas diseño", error);
   }
 }
+
 export async function updateTask(taskId, body) {
   const options = {
     method: "PUT",
@@ -110,5 +112,28 @@ export async function updateTask(taskId, body) {
     return data;
   } catch (error) {
     console.error("Error updating task status:", error);
+  }
+}
+
+export async function addQcPoints(taskId, qcPoints) {
+  const customField = {
+    id: "cb50c3de-e9b0-4e1f-b9a7-7dc792192704",
+    name: "DESIGN POINTS",
+  };
+
+  const fieldId = customField.id;
+  const body = JSON.stringify({ value: qcPoints });
+  const url = `https://api.clickup.com/api/v2/task/${taskId}/field/${fieldId}`;
+
+  try {
+    const response = await makeAxiosRequest("post", url, body);
+    if (response) {
+      console.log(`Se han actualizado los puntos de QC de la tarea ${taskId}`);
+      return response;
+    } else {
+      console.error("Error al actualizar los puntos de QC");
+    }
+  } catch (error) {
+    console.error("Error al actualizar los puntos de QC", error);
   }
 }

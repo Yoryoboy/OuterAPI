@@ -3,6 +3,7 @@ import {
   add_to_contractor_list,
   updateRoundedMilesCustomField,
   sendNoCodesEmail,
+  addQcPointsFromDesignPoints,
 } from "../controllers/webhookController.js";
 import { validateField } from "../middlewares/fieldValidator.js";
 import {
@@ -24,7 +25,7 @@ router.post(
   updateRoundedMilesCustomField
 );
 
-router.post("/cci/add_qc_points");
+router.post("/cci/add_qc_points", addQcPointsFromDesignPoints);
 
 router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 

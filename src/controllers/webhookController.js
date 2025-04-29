@@ -5,7 +5,7 @@ import {
   updateRoundedMiles,
 } from "../services/webhookService.js";
 import { getNoCodesEmail } from "../templates/emailTemplates.js";
-import { updateTask } from "../utils/clickUpApi.js";
+import { addQcPoints, updateTask } from "../utils/clickUpApi.js";
 
 export function add_to_contractor_list(req, res) {
   const historyItems = req.body.history_items[0];
@@ -52,6 +52,7 @@ export function updateRoundedMilesCustomField(req, res) {
     res.status(500).json({
       stage: "updateRoundedMilesCustomField",
       message: "Invalid data",
+      error,
     });
   }
 }
@@ -78,6 +79,27 @@ export async function sendNoCodesEmail(req, res) {
       stage: "sendNoCodesEmail",
       message: "Error al enviar el email",
       error: error.message,
+    });
+  }
+}
+
+export async function addQcPointsFromDesignPoints(req, res) {
+  const { design_points, task_id } = req.query;
+  const qcPoints = design_points * 2.75;
+
+  try {
+    await addQcPoints(task_id, qcPoints);
+    res.status(200).json({
+      stage: "addQcPointsFromDesignPoints",
+      message: "Qc points added",
+    });
+    console.log(`Qc points added to task ${task_id}`);
+  } catch (error) {
+    console.error("Error adding qc points", error);
+    res.status(500).json({
+      stage: "addQcPointsFromDesignPoints",
+      message: "Error adding qc points",
+      error,
     });
   }
 }
