@@ -32,6 +32,7 @@ export function validateCciMiles(req, res, next) {
     res.status(500).json({
       stage: "validateCciMiles",
       message: "There was an error validating the data",
+      error,
     });
   }
 }

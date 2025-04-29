@@ -24,6 +24,8 @@ router.post(
   updateRoundedMilesCustomField
 );
 
+router.post("/cci/add_qc_points");
+
 router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 
 export default router;
