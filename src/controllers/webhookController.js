@@ -99,7 +99,7 @@ export async function addQcPointsFromDesignPoints(req, res) {
     });
   }
 
-  const qcPoints = (designPointsValue * 2.75).toFixed(2);
+  const qcPoints = (designPointsValue * 0.5).toFixed(2);
 
   try {
     await addQcPoints(taskId, qcPoints);
