@@ -84,13 +84,31 @@ export async function sendNoCodesEmail(req, res) {
 }
 
 export async function addQcPointsFromDesignPoints(req, res) {
-  const { design_points, task_id } = req.query;
-  const qcPoints = design_points * 2.75;
+  const { payload } = req.body;
+
+  const taskId = payload.id;
+
+  const designPointsValue = payload.fields.find(
+    (field) => field.field_id === "cb50c3de-e9b0-4e1f-b9a7-7dc792192704"
+  ).value;
+
+  if (!designPointsValue) {
+    return res.status(200).json({
+      stage: "addQcPointsFromDesignPoints",
+      message: "No se encontró ningún valor para el campo de puntos de diseño",
+    });
+  }
+
+  const qcPoints = designPointsValue * 2.75;
 
   try {
-    await addQcPoints(task_id, qcPoints);
+    await addQcPoints(taskId, qcPoints);
+    return res.status(204).json({
+      stage: "addQcPointsFromDesignPoints",
+      message: "Qc points added",
+    });
   } catch (error) {
-    console.error("Error adding qc points", error);
+    console.error("Error adding qc points: ", error);
     res.status(500).json({
       stage: "addQcPointsFromDesignPoints",
       message: "Error adding qc points",

@@ -86,7 +86,7 @@ export async function updateDesignMiles(miles, taskId) {
     if (response) {
       console.log(`Se han actualizado las millas diseño de la tarea ${taskId}`);
     } else {
-      console.error("Error al actualizar las millas diseño", error);
+      console.error("Error al actualizar las millas diseño");
     }
   } catch (error) {
     console.error("Error al actualizar las millas diseño", error);
@@ -116,18 +116,18 @@ export async function updateTask(taskId, body) {
 }
 
 export async function addQcPoints(taskId, qcPoints) {
-  const customField = {
+  const qcPointsCustomField = {
     id: "9ac8d58a-d1ae-46f6-8c29-6d49a63340de",
     name: "QC POINTS",
   };
 
-  const fieldId = customField.id;
+  const fieldId = qcPointsCustomField.id;
   const body = JSON.stringify({ value: qcPoints });
   const url = `https://api.clickup.com/api/v2/task/${taskId}/field/${fieldId}`;
 
   try {
-    const response = await makeAxiosRequest("post", url, body);
-    if (response) {
+    const data = await makeAxiosRequest("post", url, body);
+    if (data) {
       console.log(`Se han actualizado los puntos de QC de la tarea ${taskId}`);
     } else {
       console.error("Error al actualizar los puntos de QC");
