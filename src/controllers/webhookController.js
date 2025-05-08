@@ -88,11 +88,22 @@ export async function addQcPointsFromDesignPoints(req, res) {
 
   const taskId = payload.id;
 
-  const designPointsValue = payload.fields.find(
+  const designPointField = payload.fields.find(
     (field) => field.field_id === "cb50c3de-e9b0-4e1f-b9a7-7dc792192704"
-  ).value;
+  );
+
+  if (!designPointField) {
+    console.log(`No se encontró el campo de puntos de diseño para la tarea ${taskId}`);
+    return res.status(200).json({
+      stage: "addQcPointsFromDesignPoints",
+      message: "No se encontró el campo de puntos de diseño",
+    });
+  }
+
+  const designPointsValue = designPointField.value;
 
   if (!designPointsValue) {
+    console.log(`No se encontró ningún valor para el campo de puntos de diseño para la tarea ${taskId}`);
     return res.status(200).json({
       stage: "addQcPointsFromDesignPoints",
       message: "No se encontró ningún valor para el campo de puntos de diseño",
