@@ -13,6 +13,7 @@ export function getCodesCustomFields(task) {
       field.value &&
       (field.name?.includes("(EA)") ||
         field.name?.includes("(FT)") ||
-        field.name?.includes("(HR)"))
+        field.name?.includes("(HR)") ||
+        field.name?.includes("(MILE)") )
   );
 }
