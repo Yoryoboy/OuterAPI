@@ -5,11 +5,14 @@ import {
   sendNoCodesEmail,
   addQcPointsFromDesignPoints,
 } from "../controllers/webhookController.js";
+import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { validateField } from "../middlewares/fieldValidator.js";
 import {
   validateCciMiles,
   validateSentTask,
 } from "../middlewares/validateCciMiles.js";
+import { validateStatusField } from "../middlewares/statusFieldValidator.js";
+import { validateValidStatus } from "../middlewares/validStatusValidator.js";
 
 const router = Router();
 
@@ -28,5 +31,12 @@ router.post(
 router.post("/cci/add_qc_points", addQcPointsFromDesignPoints);
 
 router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
+
+router.post(
+  "/cci/status_change",
+  validateStatusField,
+  validateValidStatus,
+  handleStatusChange
+);
 
 export default router;
