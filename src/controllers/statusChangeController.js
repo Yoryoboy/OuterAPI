@@ -18,12 +18,21 @@ export const handleStatusChange = (req, res) => {
     const beforeStatus = historyItem.before?.status || "unknown";
     const afterStatus = historyItem.after?.status || "unknown";
     
+    // Prepare task data to pass to the service
+    const taskData = {
+      taskId: req.body.task_id,
+      webhookId: req.body.webhook_id,
+      historyItemId: historyItem.id,
+      user: historyItem.user
+    };
+    
     // Process the status change using the service
     // For now, we're using the default callback, but this could be customized later
     const result = processStatusChange(
       beforeStatus,
       afterStatus,
-      defaultStatusChangeCallback
+      defaultStatusChangeCallback,
+      taskData
     );
     
     // If processing was successful, return a success response
@@ -31,7 +40,8 @@ export const handleStatusChange = (req, res) => {
       return res.status(200).json({
         success: true,
         message: `Status change processed: ${beforeStatus} -> ${afterStatus}`,
-        taskId: req.body.task_id
+        taskId: req.body.task_id,
+        ruleApplied: afterStatus.toLowerCase() === "asbuilt ready for qc" ? "Update custom field for QC readiness" : "None"
       });
     } else {
       // If there was an error in processing, return an error response
