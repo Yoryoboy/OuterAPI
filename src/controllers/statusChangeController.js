@@ -23,6 +23,7 @@ export const handleStatusChange = (req, res) => {
       taskId: req.body.task_id,
       webhookId: req.body.webhook_id,
       historyItemId: historyItem.id,
+      historyItemDate: historyItem.date, // Extract the date from the history item
       user: historyItem.user
     };
     

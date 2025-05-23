@@ -2,6 +2,8 @@
  * Service to handle task status changes from ClickUp
  * Contains the core business logic for processing status changes
  */
+import { makeAxiosRequest } from "../utils/axiosHelpers.js";
+import { customFields } from "../config/customFields.js";
 
 /**
  * Processes a status change for a ClickUp task
@@ -47,14 +49,62 @@ export const defaultStatusChangeCallback = (beforeStatus, afterStatus, taskData 
 
 /**
  * Handles the specific case when a task is moved to "asbuilt ready for qc" status
- * In a real implementation, this would update a custom field in ClickUp
+ * Updates the ASBUILT QC SUBMISSION DATE custom field with the date from the webhook payload
  * @param {Object} taskData - Data about the task from the webhook payload
  */
-const handleAsbuiltReadyForQc = (taskData) => {
+const handleAsbuiltReadyForQc = async (taskData) => {
   console.log("=== ASBUILT READY FOR QC HANDLER ====");
   console.log(`Task ID: ${taskData.taskId || "Unknown"}`);
-  console.log("Action: Would update custom field for QC readiness");
-  console.log("Note: This is a placeholder for the actual API call to update the custom field");
-  console.log("In a real implementation, this would make an API call to ClickUp to update the custom field");
-  console.log("================================================");
+  
+  try {
+    // Find the custom field for ASBUILT QC SUBMISSION DATE
+    const qcSubmissionDateField = customFields.find(field => 
+      field.name.toLowerCase() === "asbuilt qc submission date".toLowerCase()
+    );
+    
+    if (!qcSubmissionDateField) {
+      console.error("Error: ASBUILT QC SUBMISSION DATE custom field not found");
+      return false;
+    }
+    
+    // Get the date from the webhook payload's history item
+    const dateFromPayload = taskData.historyItemDate;
+    
+    if (!dateFromPayload) {
+      console.error("Error: No date found in the webhook payload");
+      return false;
+    }
+    
+    console.log(`Using date from payload: ${dateFromPayload}`);
+    
+    // Prepare the request to update the custom field
+    const fieldId = qcSubmissionDateField.id;
+    
+    
+    // Prepare the body with the date value
+    const body = JSON.stringify({
+      value: parseInt(dateFromPayload, 10),
+      value_options: { time: false }
+    });
+    
+    const url = `https://api.clickup.com/api/v2/task/${taskData.taskId}/field/${fieldId}`;
+    
+    console.log(`Updating custom field ${qcSubmissionDateField.name} (${fieldId}) for task ${taskData.taskId}`);
+    
+    // Make the API call to update the custom field
+    const response = await makeAxiosRequest("post", url, body);
+    
+    if (response) {
+      console.log(`Successfully updated ASBUILT QC SUBMISSION DATE for task ${taskData.taskId}`);
+      return true;
+    } else {
+      console.error(`Failed to update ASBUILT QC SUBMISSION DATE for task ${taskData.taskId}`);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error updating ASBUILT QC SUBMISSION DATE:", error);
+    return false;
+  } finally {
+    console.log("================================================");
+  }
 };
