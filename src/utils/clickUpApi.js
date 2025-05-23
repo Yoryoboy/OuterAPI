@@ -59,7 +59,7 @@ export async function updateAsbuiltMiles(miles, taskId) {
         `Se han actualizado las millas asbuilt de la tarea ${taskId}`
       );
     } else {
-      console.error("Error al actualizar las millas asbuilt", error);
+      console.error("Error al actualizar las millas asbuilt");
     }
   } catch (error) {
     console.error("Error al actualizar las millas asbuilt", error);
