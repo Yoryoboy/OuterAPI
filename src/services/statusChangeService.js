@@ -14,6 +14,10 @@ const STATUS_RULES = {
   "design ready for qc": {
     fieldName: "first design qc submission date 1",
     description: "Update first design qc submission date 1"
+  },
+  "redesign ready for qc": {
+    fieldName: "first redesign qc submission date 1",
+    description: "Update first redesign qc submission date 1"
   }
 };
 

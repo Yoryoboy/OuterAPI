@@ -7,7 +7,8 @@ export const validateValidStatus = (req, res, next) => {
     // List of valid statuses
     const validStatuses = [
       "asbuilt ready for qc",
-      "design ready for qc"
+      "design ready for qc",
+      "redesign ready for qc"
     ];
 
     // Get the first history item
