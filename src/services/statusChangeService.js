@@ -9,15 +9,33 @@ import { apiKey } from "../config/config.js";
 const STATUS_RULES = {
   "asbuilt ready for qc": {
     fieldName: "first asbuilt qc submission date 1",
-    description: "Update first asbuilt qc submission date 1"
+    description: "Update first asbuilt qc submission date 1",
+    alwaysUpdate: false
   },
   "design ready for qc": {
     fieldName: "first design qc submission date 1",
-    description: "Update first design qc submission date 1"
+    description: "Update first design qc submission date 1",
+    alwaysUpdate: false
   },
   "redesign ready for qc": {
     fieldName: "first redesign qc submission date 1",
-    description: "Update first redesign qc submission date 1"
+    description: "Update first redesign qc submission date 1",
+    alwaysUpdate: false
+  },
+  "redesign sent": {
+    fieldName: "redesign actual completion date",
+    description: "Update redesign actual completion date",
+    alwaysUpdate: false
+  },
+  "asbuilt sent": {
+    fieldName: "preasbuilt actual completion date ",
+    description: "Update preasbuilt actual completion date",
+    alwaysUpdate: true
+  },
+  "sent": {
+    fieldName: "actual completion date",
+    description: "Update actual completion date",
+    alwaysUpdate: false
   }
 };
 
@@ -108,8 +126,8 @@ const handleUpdateQcDate = async (taskData, statusRule) => {
       return false;
     }
 
-    if (qcSubmissionDateField.value) {
-      console.log(`QC submission date already set, skipping update`);
+    if (qcSubmissionDateField.value && !statusRule.alwaysUpdate) {
+      console.log(`Field already set and status does not require update, skipping`);
       return true;
     }
 
