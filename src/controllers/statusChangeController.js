@@ -37,12 +37,12 @@ export const handleStatusChange = (req, res) => {
     );
     
     // If processing was successful, return a success response
-    if (result) {
+    if (result.success) {
       return res.status(200).json({
         success: true,
         message: `Status change processed: ${beforeStatus} -> ${afterStatus}`,
         taskId: req.body.task_id,
-        ruleApplied: afterStatus.toLowerCase() === "asbuilt ready for qc" ? "Update custom field for QC readiness" : "None"
+        ruleApplied: result.ruleApplied
       });
     } else {
       // If there was an error in processing, return an error response
