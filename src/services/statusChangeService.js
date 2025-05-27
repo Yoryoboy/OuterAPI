@@ -6,6 +6,17 @@ import { makeAxiosRequest } from "../utils/axiosHelpers.js";
 import axios from "axios";
 import { apiKey } from "../config/config.js";
 
+const STATUS_RULES = {
+  "asbuilt ready for qc": {
+    fieldName: "first asbuilt qc submission date 1",
+    description: "Update first asbuilt qc submission date 1"
+  },
+  "design ready for qc": {
+    fieldName: "first design qc submission date 1",
+    description: "Update first design qc submission date 1"
+  }
+};
+
 /**
  * Processes a status change for a ClickUp task
  * @param {string} beforeStatus - The previous status of the task
@@ -24,11 +35,12 @@ export const processStatusChange = (
     console.log(`Status changed from "${beforeStatus}" to "${afterStatus}"`);
 
     let ruleApplied = "None";
+    const statusRule = STATUS_RULES[afterStatus.toLowerCase()]
 
-    if (afterStatus.toLowerCase() === "asbuilt ready for qc") {
-      ruleApplied = "Update first asbuilt qc submission date 1";
+    if (statusRule) {
+      ruleApplied = statusRule.description;
       console.log(`Rule triggered: ${ruleApplied}`);
-      handleAsbuiltReadyForQc(taskData);
+      handleUpdateQcDate(taskData, statusRule);
     }
 
     callback(beforeStatus, afterStatus);
@@ -67,8 +79,8 @@ export const defaultStatusChangeCallback = (
  * Updates the ASBUILT QC SUBMISSION DATE custom field with the date from the webhook payload
  * @param {Object} taskData - Data about the task from the webhook payload
  */
-const handleAsbuiltReadyForQc = async (taskData) => {
-  console.log("=== ASBUILT READY FOR QC HANDLER ====");
+const handleUpdateQcDate = async (taskData, statusRule) => {
+  console.log(`=== ${statusRule.description.toUpperCase()} HANDLER ====`);
   console.log(`Task ID: ${taskData.taskId || "Unknown"}`);
 
   try {
@@ -84,23 +96,23 @@ const handleAsbuiltReadyForQc = async (taskData) => {
     const qcSubmissionDateField = task.data.custom_fields.find(
       (field) =>
         field.name.toLowerCase() ===
-        "first asbuilt qc submission date 1".toLowerCase()
+        statusRule.fieldName.toLowerCase()
     );
 
     if (!qcSubmissionDateField) {
-      console.error("Error: ASBUILT QC SUBMISSION DATE custom field not found");
+      console.error(`Error: ${statusRule.fieldName} custom field not found`);
       return false;
     }
 
     if (qcSubmissionDateField.value) {
-      console.log("QC submission date already set, skipping update");
+      console.log(`QC submission date already set, skipping update`);
       return true;
     }
 
     const dateFromPayload = taskData.historyItemDate;
 
     if (!dateFromPayload) {
-      console.error("Error: No date found in the webhook payload");
+      console.error(`Error: No date found in the webhook payload`);
       return false;
     }
 
