@@ -3,7 +3,6 @@
  * Contains the core business logic for processing status changes
  */
 import { makeAxiosRequest } from "../utils/axiosHelpers.js";
-import { customFields } from "../config/customFields.js";
 import axios from "axios";
 import { apiKey } from "../config/config.js";
 
@@ -24,17 +23,26 @@ export const processStatusChange = (
     console.log("Task ID:", taskData.taskId);
     console.log(`Status changed from "${beforeStatus}" to "${afterStatus}"`);
 
+    let ruleApplied = "None";
+
     if (afterStatus.toLowerCase() === "asbuilt ready for qc") {
-      console.log("Rule triggered: Task moved to 'asbuilt ready for qc'");
+      ruleApplied = "Update first asbuilt qc submission date 1";
+      console.log(`Rule triggered: ${ruleApplied}`);
       handleAsbuiltReadyForQc(taskData);
     }
 
     callback(beforeStatus, afterStatus);
 
-    return true;
+    return {
+      success: true,
+      ruleApplied
+    };
   } catch (error) {
     console.error("Error processing status change:", error);
-    return false;
+    return {
+      success: false,
+      ruleApplied: "None"
+    };
   }
 };
 
