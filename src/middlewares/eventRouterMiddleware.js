@@ -1,14 +1,15 @@
 export const eventRouter = (eventHandlers) => {
   return (req, res, next) => {
     try {
-      const eventType = req.body.event;
+      // Check for updateType (set by updateTypeMiddleware) or fall back to event type
+      const updateType = req.updateType || req.body.event;
       
-      if (!eventType || !eventHandlers[eventType]) {
-        console.log(`Event type not supported or missing: ${eventType || 'undefined'}`);
+      if (!updateType || !eventHandlers[updateType]) {
+        // Return 204 without logging for cleaner logs
         return res.status(204).end();
       }
       
-      req.eventHandler = eventHandlers[eventType];
+      req.eventHandler = eventHandlers[updateType];
       next();
     } catch (error) {
       console.error("Error in event router middleware:", error);

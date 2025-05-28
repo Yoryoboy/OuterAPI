@@ -13,6 +13,7 @@ import {
 import { eventRouter } from "../middlewares/eventRouterMiddleware.js";
 import { executeEventHandler } from "../middlewares/eventHandlerMiddleware.js";
 import { buildEventHandlers } from "../handlers/eventHandlers.js";
+import { identifyUpdateType } from "../middlewares/updateTypeMiddleware.js";
 
 const router = Router();
 
@@ -38,6 +39,7 @@ router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 // New unified webhook endpoint for all ClickUp events
 router.post(
   "/cci/webhook",
+  identifyUpdateType,
   eventRouter(eventHandlers),
   executeEventHandler
 );

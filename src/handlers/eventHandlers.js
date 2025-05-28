@@ -2,8 +2,7 @@
 import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { validateStatusField } from "../middlewares/statusFieldValidator.js";
 import { validateValidStatus } from "../middlewares/validStatusValidator.js";
-
-// Import future handlers here as you add them
+import { handleEstimatedDeliveryDateUpdate } from "../controllers/customFieldController.js";
 
 /**
  * Configuration for event handlers with their middleware chains
@@ -12,10 +11,17 @@ import { validateValidStatus } from "../middlewares/validStatusValidator.js";
  * - handler: The final handler function for the event
  */
 export const eventHandlerConfig = {
+  // Status update handler
   "taskStatusUpdated": {
     middlewares: [validateStatusField, validateValidStatus],
     handler: handleStatusChange
   },
+  
+  // Custom field update handlers
+  "customField_ESTIMATED_DELIVERY_DATE": {
+    middlewares: [],
+    handler: handleEstimatedDeliveryDateUpdate
+  }
 };
 
 /**
