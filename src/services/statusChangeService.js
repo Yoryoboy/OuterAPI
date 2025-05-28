@@ -38,8 +38,8 @@ const STATUS_RULES = {
     alwaysUpdate: false
   },
   "ready for qc": {
-    fieldName: "first qc submission date 1",
-    description: "Update first qc submission date 1",
+    fieldName: "submitted to qc",
+    description: "Update submitted to qc",
     alwaysUpdate: true
   }
 };
