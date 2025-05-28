@@ -11,7 +11,8 @@ export const validateValidStatus = (req, res, next) => {
       "redesign ready for qc",
       "redesign sent",
       "asbuilt sent",
-      "sent"
+      "sent",
+      "ready for qc",
     ];
 
     // Get the first history item
