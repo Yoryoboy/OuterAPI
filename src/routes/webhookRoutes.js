@@ -5,16 +5,19 @@ import {
   sendNoCodesEmail,
   addQcPointsFromDesignPoints,
 } from "../controllers/webhookController.js";
-import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { validateField } from "../middlewares/fieldValidator.js";
 import {
   validateCciMiles,
   validateSentTask,
 } from "../middlewares/validateCciMiles.js";
-import { validateStatusField } from "../middlewares/statusFieldValidator.js";
-import { validateValidStatus } from "../middlewares/validStatusValidator.js";
+import { eventRouter } from "../middlewares/eventRouterMiddleware.js";
+import { executeEventHandler } from "../middlewares/eventHandlerMiddleware.js";
+import { buildEventHandlers } from "../handlers/eventHandlers.js";
 
 const router = Router();
+
+// Build the event handlers registry
+const eventHandlers = buildEventHandlers();
 
 router.post(
   "/king/add_to_contractor_list",
@@ -32,11 +35,21 @@ router.post("/cci/add_qc_points", addQcPointsFromDesignPoints);
 
 router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 
+// New unified webhook endpoint for all ClickUp events
+router.post(
+  "/cci/webhook",
+  eventRouter(eventHandlers),
+  executeEventHandler
+);
+
+
+// remove once you've migrated all webhooks to the new endpoint
 router.post(
   "/cci/status_change",
-  validateStatusField,
-  validateValidStatus,
-  handleStatusChange
+  eventRouter({
+    "taskStatusUpdated": eventHandlers["taskStatusUpdated"]
+  }),
+  executeEventHandler
 );
 
 export default router;
