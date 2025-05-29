@@ -30,7 +30,7 @@ const STATUS_RULES = {
   "asbuilt sent": {
     fieldName: "preasbuilt actual completion date ",
     description: "Update preasbuilt actual completion date",
-    alwaysUpdate: true
+    alwaysUpdate: false
   },
   "sent": {
     fieldName: "actual completion date",
