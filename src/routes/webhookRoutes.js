@@ -16,8 +16,6 @@ import { buildEventHandlers } from "../handlers/eventHandlers.js";
 import { identifyUpdateType } from "../middlewares/updateTypeMiddleware.js";
 
 const router = Router();
-
-// Build the event handlers registry
 const eventHandlers = buildEventHandlers();
 
 router.post(
