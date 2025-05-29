@@ -3,6 +3,8 @@ import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { validateStatusField } from "../middlewares/statusFieldValidator.js";
 import { validateValidStatus } from "../middlewares/validStatusValidator.js";
 import { handleEstimatedDeliveryDateUpdate } from "../controllers/customFieldController.js";
+import { validateList } from "../middlewares/listValidator.js";
+import { CCI_BAU_LIST } from "../config/listsDetails.js";
 
 /**
  * Configuration for event handlers with their middleware chains
@@ -19,7 +21,7 @@ export const eventHandlerConfig = {
   
   // Custom field update handlers
   "customField_ESTIMATED_DELIVERY_DATE": {
-    middlewares: [],
+    middlewares: [validateList(CCI_BAU_LIST.id)],
     handler: handleEstimatedDeliveryDateUpdate
   }
 };

@@ -227,3 +227,158 @@ export const CCI_HS_LIST = {
     id: "3051792",
   },
 };
+
+export const CCI_BAU_LIST = {
+  id: '901404730264',
+  name: 'CCI - BAU',
+  deleted: false,
+  orderindex: 13,
+  content: '',
+  status: {
+    status: 'green',
+    color: '#2ecd6f',
+    hide_label: true
+  },
+  priority: null,
+  assignee: null,
+  task_count: 302,
+  due_date: null,
+  start_date: null,
+  folder: {
+    id: '90020411273',
+    name: 'Projects',
+    hidden: false,
+    access: true
+  },
+  space: {
+    id: '90020168638',
+    name: 'CCI',
+    access: true
+  },
+  inbound_address: 'a.t.901404730264.u-82237767.95f7c9e6-81a6-4a47-af09-5388ef26bf8c@tasks.clickup.com',
+  archived: false,
+  override_statuses: true,
+  statuses: [
+    {
+      id: 'sc901404730264_C6nWBXwY',
+      status: 'to do',
+      orderindex: 0,
+      color: '#87909e',
+      type: 'open',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_YW0icxg1',
+      status: 'in progress',
+      orderindex: 1,
+      color: '#5f55ee',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_Cfoaf5hr',
+      status: 'ready for qc',
+      orderindex: 2,
+      color: '#ee5e99',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_rKmUKVo9',
+      status: 'internal qc',
+      orderindex: 3,
+      color: '#ee5e99',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_HXMcigJS',
+      status: 'needs corrections',
+      orderindex: 4,
+      color: '#e16b16',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_rvZiPqRa',
+      status: 'applying corrections',
+      orderindex: 5,
+      color: '#f8ae00',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_dZnM2enc',
+      status: 'ready to send',
+      orderindex: 6,
+      color: '#b660e0',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_fUjJgVnp',
+      status: 'internal hold',
+      orderindex: 7,
+      color: '#d33d44',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_CX2NHiRh',
+      status: 'pending cci response',
+      orderindex: 8,
+      color: '#d33d44',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_CjDAdIF9',
+      status: 'rdc ticket requested',
+      orderindex: 9,
+      color: '#d33d44',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_PgiPiDva',
+      status: 'qb ticket pending',
+      orderindex: 10,
+      color: '#f8ae00',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_KhOtg9ns',
+      status: 'pending charter response',
+      orderindex: 11,
+      color: '#d33d44',
+      type: 'custom',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_8yGsOXSz',
+      status: 'sent',
+      orderindex: 12,
+      color: '#4466ff',
+      type: 'done',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_L8y91Y6B',
+      status: 'cancelled',
+      orderindex: 13,
+      color: '#656f7d',
+      type: 'done',
+      status_group: 'subcat_901404730264'
+    },
+    {
+      id: 'sc901404730264_6FsxTOBD',
+      status: 'approved',
+      orderindex: 14,
+      color: '#008844',
+      type: 'closed',
+      status_group: 'subcat_901404730264'
+    }
+  ],
+  permission_level: 'create'
+}

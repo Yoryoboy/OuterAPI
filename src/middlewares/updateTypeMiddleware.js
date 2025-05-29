@@ -7,7 +7,6 @@ export const identifyUpdateType = (req, res, next) => {
     if (req.body.history_items && req.body.history_items.length > 0) {
       const historyItem = req.body.history_items[0];
       
-      // For status updates
       if (historyItem.field === "status") {
         req.updateType = "taskStatusUpdated";
         req.statusData = {
@@ -16,9 +15,9 @@ export const identifyUpdateType = (req, res, next) => {
         };
       }
       
-      // For custom field updates
       else if (historyItem.field === "custom_field" && historyItem.custom_field) {
         req.updateType = `customField_${historyItem.custom_field.name.replace(/\s+/g, '_')}`;
+        req.listId = historyItem.parent_id;
         req.customFieldData = {
           fieldId: historyItem.custom_field.id,
           fieldName: historyItem.custom_field.name,
