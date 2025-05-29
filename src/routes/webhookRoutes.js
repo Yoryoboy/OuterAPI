@@ -36,21 +36,11 @@ router.post("/cci/add_qc_points", addQcPointsFromDesignPoints);
 
 router.post("/cci/validate_sent_task", validateSentTask, sendNoCodesEmail);
 
-// New unified webhook endpoint for all ClickUp events
+
 router.post(
   "/cci/webhook",
   identifyUpdateType,
   eventRouter(eventHandlers),
-  executeEventHandler
-);
-
-
-// remove once you've migrated all webhooks to the new endpoint
-router.post(
-  "/cci/status_change",
-  eventRouter({
-    "taskStatusUpdated": eventHandlers["taskStatusUpdated"]
-  }),
   executeEventHandler
 );
 
