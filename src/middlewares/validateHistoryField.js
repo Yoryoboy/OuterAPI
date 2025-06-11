@@ -16,11 +16,15 @@ export const validateHistoryField = (
         return res.status(204).end();
       }
 
-      const historyItem = req.body.history_items[0];
+      const historyItem = req.body.history_items.find(
+        (item) => item.field === fieldName
+      );
 
-      if (historyItem.field !== fieldName) {
+      if (!historyItem) {
         return res.status(204).end();
       }
+
+      req.historyItem = historyItem;
 
       next();
     } catch (error) {

@@ -4,7 +4,7 @@ export const executeEventHandler = (req, res) => {
       console.error("No event handler found in request object");
       return res.status(500).json({ error: "Internal server error" });
     }
-    
+
     req.eventHandler(req, res);
   } catch (error) {
     console.error("Error executing event handler:", error);

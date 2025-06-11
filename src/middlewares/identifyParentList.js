@@ -13,7 +13,7 @@ import {
 
 export const identifyParentList = (req, res, next) => {
   try {
-    const historyItem = req.body.history_items[0];
+    const historyItem = req.historyItem || req.body.history_items[0];
     const parentId = historyItem.parent_id;
 
     if (!parentId) {

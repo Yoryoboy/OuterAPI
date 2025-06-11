@@ -4,7 +4,10 @@ import { validateList } from "../middlewares/listValidator.js";
 import { CCI_BAU_LIST } from "../config/listsDetails.js";
 import { identifyParentList } from "../middlewares/identifyParentList.js";
 import { handleTaskCreated } from "../controllers/taskCreatedController.js";
-import { validateStatusField, validateTaskCreation } from "../middlewares/validateHistoryField.js";
+import {
+  validateStatusField,
+  validateTaskCreation,
+} from "../middlewares/validateHistoryField.js";
 import { handleStatusChange } from "../controllers/statusChangeController.js";
 
 /**
