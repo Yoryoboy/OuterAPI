@@ -43,7 +43,6 @@ export async function updateAsbuiltMiles(miles, taskId) {
     type: "number",
   };
 
-  const teamId = CCI_HS_LIST.team.id;
   const fieldId = customField.id;
   const query = new URLSearchParams({
     custom_task_ids: "true",
