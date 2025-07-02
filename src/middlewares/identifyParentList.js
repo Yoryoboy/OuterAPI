@@ -21,23 +21,26 @@ const LIST_CONFIG_MAP = {
     parentList: CCI_HS_LIST,
     targetLists: [
       { id: CCI_HS_LIST.billingList.id, name: CCI_HS_LIST.billingList.name },
-      { id: CCI_HS_LIST.qcList.id, name: CCI_HS_LIST.qcList.name }
-    ]
+      { id: CCI_HS_LIST.qcList.id, name: CCI_HS_LIST.qcList.name },
+    ],
   },
   [CCI_BAU_LIST.id]: {
     parentList: CCI_BAU_LIST,
     targetLists: [
       { id: CCI_BAU_LIST.billingList.id, name: CCI_BAU_LIST.billingList.name },
-      { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name }
-    ]
+      { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name },
+    ],
   },
   [TRUENET_BAU_LIST.id]: {
     parentList: TRUENET_BAU_LIST,
     targetLists: [
-      { id: TRUENET_BAU_LIST.billingList.id, name: TRUENET_BAU_LIST.billingList.name },
-      { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name }
-    ]
-  }
+      {
+        id: TRUENET_BAU_LIST.billingList.id,
+        name: TRUENET_BAU_LIST.billingList.name,
+      },
+      { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name },
+    ],
+  },
 };
 
 /**
@@ -49,28 +52,22 @@ const LIST_CONFIG_MAP = {
  */
 export const identifyParentList = (req, res, next) => {
   try {
-    // Get the history item from either the attached property or the first item
     const historyItem = req.historyItem || req.body.history_items[0];
     const parentId = historyItem.parent_id;
 
-    // Validate parent ID exists
     if (!parentId) {
       return res.status(400).json({ error: "No parent list ID found" });
     }
 
-    // Look up the parent list configuration
     const listConfig = LIST_CONFIG_MAP[parentId];
-    
-    // If no matching configuration, return 204 No Content
+
     if (!listConfig) {
       return res.status(204).end();
     }
-    
-    // Extract target list IDs and names
-    const targetListIds = listConfig.targetLists.map(list => list.id);
-    const targetListNames = listConfig.targetLists.map(list => list.name);
-    
-    // Attach data to request object for downstream handlers
+
+    const targetListIds = listConfig.targetLists.map((list) => list.id);
+    const targetListNames = listConfig.targetLists.map((list) => list.name);
+
     req.addToListIds = targetListIds;
     req.addToListNames = targetListNames;
     req.parentListId = parentId;
