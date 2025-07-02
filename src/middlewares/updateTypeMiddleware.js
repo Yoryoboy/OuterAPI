@@ -1,17 +1,17 @@
 export const identifyUpdateType = (req, res, next) => {
   try {
-    req.updateType = req.body.event;
-
     if (req.body.history_items && req.body.history_items.length > 0) {
+      const event = req.body.event;
       const historyItem = req.body.history_items[0];
 
-      if (historyItem.field === "status") {
+      if (event === "taskUpdated" && historyItem.field === "status") {
         req.updateType = "taskStatusUpdated";
         req.statusData = {
           before: historyItem.before?.status,
           after: historyItem.after?.status,
         };
       } else if (
+        event === "taskUpdated" &&
         historyItem.field === "custom_field" &&
         historyItem.custom_field
       ) {
@@ -27,6 +27,8 @@ export const identifyUpdateType = (req, res, next) => {
           after: historyItem.after,
           fieldType: historyItem.custom_field.type,
         };
+      } else if (event === "taskCreated") {
+        req.updateType = "taskCreated";
       }
     }
 

@@ -27,3 +27,12 @@ export const TRUENET_BAU_LIST = {
     name: "TrueNet - BAU - BILLING CODES",
   },
 };
+
+export const GLOBAL_BAU_LIST = {
+  id: "901409763969",
+  name: "Global - BAU",
+  billingList: {
+    id: "901409764027",
+    name: "Global - BAU - BILLING CODES",
+  },
+};

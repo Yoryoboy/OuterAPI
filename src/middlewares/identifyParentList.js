@@ -9,6 +9,7 @@ import {
   CCI_HS_LIST,
   CCI_BAU_LIST,
   TRUENET_BAU_LIST,
+  GLOBAL_BAU_LIST,
 } from "../config/listsDetails.js";
 
 export const identifyParentList = (req, res, next) => {
@@ -20,24 +21,21 @@ export const identifyParentList = (req, res, next) => {
       return res.status(400).json({ error: "No parent list ID found" });
     }
 
-    let targetList = null;
+    let targetLists = [];
 
     if (parentId === CCI_HS_LIST.id) {
-      targetList = CCI_HS_LIST;
+      targetLists = [CCI_HS_LIST.billingList.id];
     } else if (parentId === CCI_BAU_LIST.id) {
-      targetList = CCI_BAU_LIST;
+      targetLists = [CCI_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
     } else if (parentId === TRUENET_BAU_LIST.id) {
-      targetList = TRUENET_BAU_LIST;
+      targetLists = [TRUENET_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
     }
 
-    if (!targetList) {
+    if (!targetLists) {
       return res.status(204).end();
     }
-    req.addToList = targetList.billingList;
-    req.parentList = {
-      id: targetList.id,
-      name: targetList.name,
-    };
+    req.addToLists = targetLists;
+    req.parentListId = parentId;
 
     next();
   } catch (error) {

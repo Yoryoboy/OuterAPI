@@ -10,48 +10,40 @@ import clickUp from "../config/clickUp.js";
  */
 export const handleTaskCreated = async (req, res) => {
   try {
-    // Extract task ID from the request body
     const taskId = req.body.task_id;
 
-    // Verify that we have the billing list ID from the middleware
-    if (!req.addToList) {
+    if (req.addToLists.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Missing billing list information",
+        message: "Missing list information",
       });
     }
 
-    // Get the billing list ID to add the task to
-    const billingListId = req.addToList.id;
+    let promises = [];
 
-    // Add the task to the billing list
-    await clickUp.lists.addTaskToList(billingListId, taskId);
+    req.addToLists.forEach((listId) => {
+      promises.push(clickUp.lists.addTaskToList(listId, taskId));
+    });
 
-    // Log the successful operation
+    await Promise.allSettled(promises);
+
     console.log("=============================");
     console.log(
-      `Task ${taskId} created in list ${
-        req.parentList.name
-      } added to billing list ${req.addToList.name || billingListId}`
+      `Task ${taskId} created in lists ${req.parentListId} added to lists ${req.addToLists}`
     );
     console.log("=============================");
 
-    // Return a success response
     return res.status(200).json({
       success: true,
-      message: `Task ${taskId} created in list ${
-        req.parentList.name
-      } added to billing list ${req.addToList.name || billingListId}`,
+      message: `Task ${taskId} created in lists ${req.parentListId} added to lists ${req.addToLists}`,
       taskId: req.body.task_id,
-      parentList: req.parentList.name,
-      billingList: req.addToList.name || billingListId,
+      parentList: req.parentListId,
+      AddedToLists: req.addToLists,
     });
   } catch (error) {
-    // Handle different types of errors
     let errorMessage = "Internal server error";
     let statusCode = 500;
 
-    // Check if it's an API error with response
     if (error.response) {
       errorMessage = `ClickUp API error: ${
         error.response.statusText || error.message
@@ -59,7 +51,6 @@ export const handleTaskCreated = async (req, res) => {
       statusCode = error.response.status || 500;
     }
 
-    // Log the error with available details
     console.error(
       "Error in task creation controller:",
       error.code || "",
@@ -67,7 +58,6 @@ export const handleTaskCreated = async (req, res) => {
       error.response?.statusText || ""
     );
 
-    // Return an error response
     return res.status(statusCode).json({
       success: false,
       message: errorMessage,
