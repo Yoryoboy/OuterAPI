@@ -12,7 +12,7 @@ export const handleTaskCreated = async (req, res) => {
   try {
     const taskId = req.body.task_id;
 
-    if (req.addToLists.length === 0) {
+    if (req.addToListIds.length === 0) {
       return res.status(400).json({
         success: false,
         message: "Missing list information",
@@ -21,7 +21,7 @@ export const handleTaskCreated = async (req, res) => {
 
     let promises = [];
 
-    req.addToLists.forEach((listId) => {
+    req.addToListIds.forEach((listId) => {
       promises.push(clickUp.lists.addTaskToList(listId, taskId));
     });
 
@@ -29,16 +29,16 @@ export const handleTaskCreated = async (req, res) => {
 
     console.log("=============================");
     console.log(
-      `Task ${taskId} created in lists ${req.parentListId} added to lists ${req.addToLists}`
+      `Task ${taskId} created in lists ${req.parentListName} added to lists ${req.addToListNames}`
     );
     console.log("=============================");
 
     return res.status(200).json({
       success: true,
-      message: `Task ${taskId} created in lists ${req.parentListId} added to lists ${req.addToLists}`,
+      message: `Task ${taskId} created in lists ${req.parentListName} added to lists ${req.addToListNames}`,
       taskId: req.body.task_id,
-      parentList: req.parentListId,
-      AddedToLists: req.addToLists,
+      parentList: req.parentListName,
+      AddedToLists: req.addToListNames,
     });
   } catch (error) {
     let errorMessage = "Internal server error";

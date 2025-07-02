@@ -21,21 +21,34 @@ export const identifyParentList = (req, res, next) => {
       return res.status(400).json({ error: "No parent list ID found" });
     }
 
-    let targetLists = [];
+    let parentListName = "";
+    let targetListIds = [];
+    let targetListNames = [];
 
     if (parentId === CCI_HS_LIST.id) {
-      targetLists = [CCI_HS_LIST.billingList.id];
+      parentListName = CCI_HS_LIST.name;
+      targetListIds = [CCI_HS_LIST.billingList.id, CCI_HS_LIST.qcList.id];
+      targetListNames = [CCI_HS_LIST.billingList.name, CCI_HS_LIST.qcList.name];
     } else if (parentId === CCI_BAU_LIST.id) {
-      targetLists = [CCI_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
+      parentListName = CCI_BAU_LIST.name;
+      targetListIds = [CCI_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
+      targetListNames = [CCI_BAU_LIST.billingList.name, GLOBAL_BAU_LIST.name];
     } else if (parentId === TRUENET_BAU_LIST.id) {
-      targetLists = [TRUENET_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
+      parentListName = TRUENET_BAU_LIST.name;
+      targetListIds = [TRUENET_BAU_LIST.billingList.id, GLOBAL_BAU_LIST.id];
+      targetListNames = [
+        TRUENET_BAU_LIST.billingList.name,
+        GLOBAL_BAU_LIST.name,
+      ];
     }
 
-    if (!targetLists) {
+    if (!targetListIds) {
       return res.status(204).end();
     }
-    req.addToLists = targetLists;
+    req.addToListIds = targetListIds;
+    req.addToListNames = targetListNames;
     req.parentListId = parentId;
+    req.parentListName = parentListName;
 
     next();
   } catch (error) {

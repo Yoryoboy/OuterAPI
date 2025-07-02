@@ -8,6 +8,10 @@ export const CCI_HS_LIST = {
     id: "900201055245",
     name: "CCI - HS - BILLING CODES",
   },
+  qcList: {
+    id: "901402069894",
+    name: "CCI - HS - QC",
+  },
 };
 
 export const CCI_BAU_LIST = {
