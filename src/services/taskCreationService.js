@@ -2,7 +2,6 @@
  * Service for handling task creation operations
  */
 import clickUp from "../config/clickUp.js";
-import { CCI_BAU_LIST } from "../config/listsDetails.js";
 
 /**
  * Process a newly created task based on its parent list
@@ -19,17 +18,17 @@ export const processNewTask = async (taskId, parentListId, targetListIds) => {
 
   results.addToListsResult = await addTaskToLists(taskId, targetListIds);
 
-  try {
-    if (parentListId === CCI_BAU_LIST.id) {
-      results.taskUpdateResult = await updateCciBauTaskFields(taskId);
-    }
-  } catch (error) {
-    console.error(
-      `Error in list-specific processing for list ${parentListId}:`,
-      error
-    );
-    results.error = error;
-  }
+  // try {
+  //   if (parentListId === CCI_BAU_LIST.id) {
+  //     results.taskUpdateResult = await updateCciBauTaskFields(taskId);
+  //   }
+  // } catch (error) {
+  //   console.error(
+  //     `Error in list-specific processing for list ${parentListId}:`,
+  //     error
+  //   );
+  //   results.error = error;
+  // }
 
   return results;
 };
@@ -45,31 +44,36 @@ export const addTaskToLists = async (taskId, listIds) => {
     clickUp.lists.addTaskToList(listId, taskId)
   );
 
-  return Promise.allSettled(promises);
+  const results = await Promise.allSettled(promises);
+
+  return results.map((result, index) => ({
+    ...result,
+    listId: listIds[index],
+  }));
 };
 
-/**
- * Updates task fields for CCI BAU tasks
- * @param {string} taskId - The ID of the task to update
- * @returns {Promise<Object>} - Result of the update operation
- */
-export const updateCciBauTaskFields = async (taskId) => {
-  const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + 5);
+// /**
+//  * Updates task fields for CCI BAU tasks
+//  * @param {string} taskId - The ID of the task to update
+//  * @returns {Promise<Object>} - Result of the update operation
+//  */
+// export const updateCciBauTaskFields = async (taskId) => {
+//   const dueDate = new Date();
+//   dueDate.setDate(dueDate.getDate() + 5);
 
-  if (dueDate.getDay() === 0) dueDate.setDate(dueDate.getDate() + 1);
-  if (dueDate.getDay() === 6) dueDate.setDate(dueDate.getDate() + 2);
+//   if (dueDate.getDay() === 0) dueDate.setDate(dueDate.getDate() + 1);
+//   if (dueDate.getDay() === 6) dueDate.setDate(dueDate.getDate() + 2);
 
-  try {
-    return await clickUp.tasks.update(taskId, {
-      due_date: dueDate.getTime(),
-      priority: 3,
-    });
-  } catch (error) {
-    console.error("Error updating CCI BAU task fields:", error);
-    throw error;
-  }
-};
+//   try {
+//     return await clickUp.tasks.update(taskId, {
+//       due_date: dueDate.getTime(),
+//       priority: 3,
+//     });
+//   } catch (error) {
+//     console.error("Error updating CCI BAU task fields:", error);
+//     throw error;
+//   }
+// };
 
 // /**
 //  * Updates task fields for TrueNet BAU tasks

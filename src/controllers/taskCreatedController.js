@@ -15,7 +15,6 @@ export const handleTaskCreated = async (req, res) => {
     const taskId = req.body.task_id;
     const parentListId = req.parentListId;
 
-    // Validate we have the necessary list information
     if (!req.addToListIds || req.addToListIds.length === 0) {
       return res.status(400).json({
         success: false,
@@ -23,21 +22,22 @@ export const handleTaskCreated = async (req, res) => {
       });
     }
 
-    // Process the task using our service
-    const results = await processNewTask(taskId, parentListId, req.addToListIds);
+    const results = await processNewTask(
+      taskId,
+      parentListId,
+      req.addToListIds
+    );
 
-    // Log the operation
     console.log("=============================");
     console.log(
       `Task ${taskId} created in list ${req.parentListName} processed:`
     );
-    console.log(`- Added to lists: ${req.addToListNames.join(", ")}`); 
+    console.log(`- Added to lists: ${req.addToListNames.join(", ")}`);
     if (results.taskUpdateResult) {
       console.log("- Applied list-specific configurations");
     }
     console.log("=============================");
 
-    // Return success response
     return res.status(200).json({
       success: true,
       message: `Task ${taskId} processed successfully`,
@@ -45,18 +45,14 @@ export const handleTaskCreated = async (req, res) => {
         taskId: taskId,
         parentList: req.parentListName,
         addedToLists: req.addToListNames,
-        fieldsUpdated: results.taskUpdateResult ? true : false
+        fieldsUpdated: results.taskUpdateResult ? true : false,
       },
       operations: {
-        listAdditions: results.addToListsResult.map(result => ({
-          status: result.status,
-          listId: result.value?.id || null
-        })),
-        fieldUpdates: results.taskUpdateResult ? true : false
-      }
+        listAdditions: results.addToListsResult,
+        fieldUpdates: results.taskUpdateResult ? true : false,
+      },
     });
   } catch (error) {
-    // Handle errors
     let errorMessage = "Internal server error";
     let statusCode = 500;
 
