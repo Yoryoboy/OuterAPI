@@ -1,4 +1,4 @@
-import clickUp from "../config/clickUp";
+import clickUp from "../config/clickUp.js";
 
 export async function handleUpdatePodsCode(req, res) {
   try {
@@ -6,17 +6,36 @@ export async function handleUpdatePodsCode(req, res) {
     const { fieldName, after } = req.customFieldData;
 
     const customFields = await clickUp.customFields.getListCustomFields(listId);
-    const customField = customFields.find((field) => field.name === fieldName);
 
-    const isHighSplit =
-      after ===
-      customField?.type_config?.options?.find(
-        (option) => option.name === "HIGH-SPLIT"
-      ).id;
+    const highSplitCustomField = customFields?.find(
+      (field) => field.name === fieldName
+    );
 
-    if (isHighSplit) {
-      console.log("IS HIGH SPLIT");
-    }
+    const highSplitId = highSplitCustomField?.type_config?.options?.find(
+      (option) => option.name === "HIGH-SPLIT"
+    ).id;
+
+    const podsCustomField = customFields?.find(
+      (field) => field.name === "PODS (CCI)"
+    );
+
+    const podsId = podsCustomField?.id;
+
+    const isHighSplit = after === highSplitId;
+
+    const value = isHighSplit
+      ? podsCustomField?.type_config?.options?.find(
+          (option) => option.name === "781-045"
+        ).id
+      : podsCustomField?.type_config?.options?.find(
+          (option) => option.name === "781-043"
+        ).id;
+
+    await clickUp.customFields.setCustomFieldValue({
+      task_id: req.taskId,
+      field_id: podsId,
+      value,
+    });
 
     return res.status(200).json({
       success: true,
@@ -25,6 +44,7 @@ export async function handleUpdatePodsCode(req, res) {
         taskId: req.taskId,
         customFieldName: fieldName,
         isHighSplit,
+        value,
       },
     });
   } catch (error) {
@@ -39,7 +59,7 @@ export async function handleUpdatePodsCode(req, res) {
     }
 
     console.error(
-      "Error in task creation controller:",
+      "Error in pods update code:",
       error.code || "",
       error.message || "",
       error.response?.statusText || ""

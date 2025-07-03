@@ -20,6 +20,7 @@ export function identifyUpdateType(req, res, next) {
           "_"
         )}`;
         req.listId = historyItem.parent_id;
+        req.taskId = req.body.task_id;
         req.customFieldData = {
           fieldId: historyItem.custom_field.id,
           fieldName: historyItem.custom_field.name,
