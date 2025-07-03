@@ -2,7 +2,7 @@
  * Middleware to identify the parent list of the task
  * If not, it returns a 204 No Content response
  */
-export const validateTaskCreation = (req, res, next) => {
+export function validateTaskCreation(req, res, next) {
   try {
     // Check if history_items exists and has at least one item
     if (!req.body.history_items || !req.body.history_items.length) {
@@ -22,4 +22,4 @@ export const validateTaskCreation = (req, res, next) => {
     console.error("Error identifying parent list:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
-};
+}

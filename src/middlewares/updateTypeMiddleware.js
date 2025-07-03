@@ -1,4 +1,4 @@
-export const identifyUpdateType = (req, res, next) => {
+export function identifyUpdateType(req, res, next) {
   try {
     if (req.body.history_items && req.body.history_items.length > 0) {
       const event = req.body.event;
@@ -37,4 +37,4 @@ export const identifyUpdateType = (req, res, next) => {
     console.error("Error in update type middleware:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
-};
+}

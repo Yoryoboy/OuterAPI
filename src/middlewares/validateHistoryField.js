@@ -6,10 +6,10 @@
  * @param {string} errorMessage - Custom error message for logging (defaults to "Error validating field")
  * @returns {Function} Express middleware function
  */
-export const validateHistoryField = (
+export function validateHistoryField(
   fieldName,
   errorMessage = "Error validating field"
-) => {
+) {
   return (req, res, next) => {
     try {
       if (!req.body.history_items || !req.body.history_items.length) {
@@ -32,7 +32,7 @@ export const validateHistoryField = (
       return res.status(500).json({ error: "Internal server error" });
     }
   };
-};
+}
 
 // Pre-configured middleware instances for common field validations
 

@@ -16,6 +16,7 @@ export function validateField(req, res, next) {
   } catch (error) {
     res.status(204).json({
       message: "Invalid data in body",
+      error,
     });
   }
 }

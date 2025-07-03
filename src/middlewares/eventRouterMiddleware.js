@@ -1,4 +1,4 @@
-export const eventRouter = (eventHandlers) => {
+export function eventRouter(eventHandlers) {
   return (req, res, next) => {
     try {
       const updateType = req.updateType || req.body.event;
@@ -14,4 +14,4 @@ export const eventRouter = (eventHandlers) => {
       return res.status(500).json({ error: "Internal server error" });
     }
   };
-};
+}

@@ -9,6 +9,7 @@ import {
   validateTaskCreation,
 } from "../middlewares/validateHistoryField.js";
 import { handleStatusChange } from "../controllers/statusChangeController.js";
+import { handleUpdatePodsCode } from "../controllers/podsCodeController.js";
 
 /**
  * Configuration for event handlers with their middleware chains
@@ -28,6 +29,10 @@ export const eventHandlerConfig = {
   customField_ESTIMATED_DELIVERY_DATE: {
     middlewares: [validateList(CCI_BAU_LIST.id)],
     handler: handleEstimatedDeliveryDateUpdate,
+  },
+  customField_JOB_TYPE_CCI: {
+    middlewares: [validateList(CCI_BAU_LIST.id)],
+    handler: handleUpdatePodsCode,
   },
 };
 

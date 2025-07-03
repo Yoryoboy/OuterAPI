@@ -50,7 +50,7 @@ const LIST_CONFIG_MAP = {
  * @param {Function} next - Express next middleware function
  * @returns {void}
  */
-export const identifyParentList = (req, res, next) => {
+export function identifyParentList(req, res, next) {
   try {
     const historyItem = req.historyItem || req.body.history_items[0];
     const parentId = historyItem.parent_id;
@@ -78,4 +78,4 @@ export const identifyParentList = (req, res, next) => {
     console.error("Error in identifyParentList middleware:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
-};
+}
