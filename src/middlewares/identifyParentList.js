@@ -27,7 +27,7 @@ const LIST_CONFIG_MAP = {
   [CCI_BAU_LIST.id]: {
     parentList: CCI_BAU_LIST,
     targetLists: [
-      { id: CCI_BAU_LIST.billingList.id, name: CCI_BAU_LIST.billingList.name },
+      // { id: CCI_BAU_LIST.billingList.id, name: CCI_BAU_LIST.billingList.name },
       { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name },
     ],
   },
