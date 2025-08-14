@@ -10,38 +10,38 @@ const STATUS_RULES = {
   "asbuilt ready for qc": {
     fieldName: "first asbuilt qc submission date 1",
     description: "Update first asbuilt qc submission date 1",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
   "design ready for qc": {
     fieldName: "first design qc submission date 1",
     description: "Update first design qc submission date 1",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
   "redesign ready for qc": {
     fieldName: "first redesign qc submission date 1",
     description: "Update first redesign qc submission date 1",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
   "redesign sent": {
     fieldName: "redesign actual completion date",
     description: "Update redesign actual completion date",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
   "asbuilt sent": {
     fieldName: "preasbuilt actual completion date ",
     description: "Update preasbuilt actual completion date",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
-  "sent": {
+  sent: {
     fieldName: "actual completion date",
     description: "Update actual completion date",
-    alwaysUpdate: false
+    alwaysUpdate: false,
   },
   "ready for qc": {
     fieldName: "submitted to qc",
     description: "Update submitted to qc",
-    alwaysUpdate: true
-  }
+    alwaysUpdate: true,
+  },
 };
 
 /**
@@ -62,7 +62,7 @@ export const processStatusChange = (
     console.log(`Status changed from "${beforeStatus}" to "${afterStatus}"`);
 
     let ruleApplied = "None";
-    const statusRule = STATUS_RULES[afterStatus.toLowerCase()]
+    const statusRule = STATUS_RULES[afterStatus.toLowerCase()];
 
     if (statusRule) {
       ruleApplied = statusRule.description;
@@ -74,13 +74,13 @@ export const processStatusChange = (
 
     return {
       success: true,
-      ruleApplied
+      ruleApplied,
     };
   } catch (error) {
     console.error("Error processing status change:", error);
     return {
       success: false,
-      ruleApplied: "None"
+      ruleApplied: "None",
     };
   }
 };
@@ -92,10 +92,7 @@ export const processStatusChange = (
  * @param {string} afterStatus - The new status of the task
  * @param {Object} taskData - Additional task data from the webhook payload
  */
-export const defaultStatusChangeCallback = (
-  beforeStatus,
-  afterStatus,
-) => {
+export const defaultStatusChangeCallback = (beforeStatus, afterStatus) => {
   console.log(
     `Callback executed for status change: ${beforeStatus} -> ${afterStatus}`
   );
@@ -121,9 +118,7 @@ const handleUpdateQcDate = async (taskData, statusRule) => {
     });
 
     const qcSubmissionDateField = task.data.custom_fields.find(
-      (field) =>
-        field.name.toLowerCase() ===
-        statusRule.fieldName.toLowerCase()
+      (field) => field.name.toLowerCase() === statusRule.fieldName.toLowerCase()
     );
 
     if (!qcSubmissionDateField) {
@@ -132,7 +127,9 @@ const handleUpdateQcDate = async (taskData, statusRule) => {
     }
 
     if (qcSubmissionDateField.value && !statusRule.alwaysUpdate) {
-      console.log(`Field already set and status does not require update, skipping`);
+      console.log(
+        `Field already set and status does not require update, skipping`
+      );
       return true;
     }
 

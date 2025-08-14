@@ -40,3 +40,12 @@ export const GLOBAL_BAU_LIST = {
     name: "Global - BAU - BILLING CODES",
   },
 };
+
+export const TECHSERV_BAU_LIST = {
+  id: "901412194617",
+  name: "TechServ  - BAU",
+  billingList: {
+    id: "901412194820",
+    name: "TechServ - BAU - BILLING CODES",
+  },
+};

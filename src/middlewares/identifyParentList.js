@@ -10,6 +10,7 @@ import {
   CCI_BAU_LIST,
   TRUENET_BAU_LIST,
   GLOBAL_BAU_LIST,
+  TECHSERV_BAU_LIST,
 } from "../config/listsDetails.js";
 
 /**
@@ -37,6 +38,16 @@ const LIST_CONFIG_MAP = {
       {
         id: TRUENET_BAU_LIST.billingList.id,
         name: TRUENET_BAU_LIST.billingList.name,
+      },
+      { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name },
+    ],
+  },
+  [TECHSERV_BAU_LIST.id]: {
+    parentList: TECHSERV_BAU_LIST,
+    targetLists: [
+      {
+        id: TECHSERV_BAU_LIST.billingList.id,
+        name: TECHSERV_BAU_LIST.billingList.name,
       },
       { id: GLOBAL_BAU_LIST.id, name: GLOBAL_BAU_LIST.name },
     ],
