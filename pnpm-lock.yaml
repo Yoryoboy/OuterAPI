@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@yoryoboy/clickup-sdk':
-        specifier: ^1.1.4
-        version: 1.1.4
+        specifier: ^1.2.0
+        version: 1.2.0
       axios:
         specifier: ^1.7.2
         version: 1.8.4
@@ -100,8 +100,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@yoryoboy/clickup-sdk@1.1.4':
-    resolution: {integrity: sha512-OSSUKaryq92JNmzborMHcG7eq/SV5n29VKO3QxrBm1wsQJ17YANwpmg8f06KehdH2EefK/2WBulUfIzaMODTCQ==}
+  '@yoryoboy/clickup-sdk@1.2.0':
+    resolution: {integrity: sha512-CFfzIRRmgf2oZ9Nty46d7MkEYdD0hzwi17Y8Ipi5Xwj4BEukyCo5UQP/7YLCcnjKWR0BKPN4GHbZksS0N2HYkA==}
 
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -754,7 +754,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@yoryoboy/clickup-sdk@1.1.4':
+  '@yoryoboy/clickup-sdk@1.2.0':
     dependencies:
       axios: 1.8.4
       dotenv: 16.5.0

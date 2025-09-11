@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@yoryoboy/clickup-sdk": "^1.1.4",
+    "@yoryoboy/clickup-sdk": "^1.2.0",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

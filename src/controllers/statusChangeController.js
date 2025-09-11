@@ -12,7 +12,7 @@ import {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-export const handleStatusChange = (req, res) => {
+export const handleStatusChange = async (req, res) => {
   try {
     const historyItem =
       req.historyItem ||
@@ -26,10 +26,11 @@ export const handleStatusChange = (req, res) => {
       webhookId: req.body.webhook_id,
       historyItemId: historyItem.id,
       historyItemDate: historyItem.date,
+      historyItemParentId: historyItem.parent_id,
       user: historyItem.user,
     };
 
-    const result = processStatusChange(
+    const result = await processStatusChange(
       beforeStatus,
       afterStatus,
       defaultStatusChangeCallback,
@@ -42,11 +43,13 @@ export const handleStatusChange = (req, res) => {
         message: `Status change processed: ${beforeStatus} -> ${afterStatus}`,
         taskId: req.body.task_id,
         ruleApplied: result.ruleApplied,
+        actions: result.actions,
       });
     } else {
       return res.status(500).json({
         success: false,
         message: "Error processing status change",
+        actions: result.actions,
       });
     }
   } catch (error) {

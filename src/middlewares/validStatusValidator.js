@@ -2,25 +2,21 @@
  * Middleware to validate if the new status is in the list of valid statuses
  * If not, it returns a 204 No Content response
  */
+import { STATUS_RULES } from "../services/statusChangeRules.js";
+
 export function validateValidStatus(req, res, next) {
   try {
-    const validStatuses = [
-      "asbuilt ready for qc",
-      "design ready for qc",
-      "redesign ready for qc",
-      "redesign sent",
-      "asbuilt sent",
-      "sent",
-      "ready for qc",
-    ];
+    const validStatuses = Object.keys(STATUS_RULES);
 
-    const historyItem = req.body.history_items[0];
+    const historyItem =
+      req.historyItem ||
+      (Array.isArray(req.body.history_items)
+        ? req.body.history_items.find((i) => i.field === "status")
+        : undefined);
 
-    if (
-      !historyItem.after ||
-      !historyItem.after.status ||
-      !validStatuses.includes(historyItem.after.status.toLowerCase())
-    ) {
+    const status = historyItem?.after?.status?.toLowerCase();
+
+    if (!status || !validStatuses.includes(status)) {
       return res.status(204).end();
     }
 
