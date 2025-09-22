@@ -1,7 +1,5 @@
-import ClickUpPkg from "@yoryoboy/clickup-sdk";
+import ClickUp from "@yoryoboy/clickup-sdk";
 import { apiKey } from "./config.js";
-const createClickUpClient = ClickUpPkg.default;
-
-const clickUp = new createClickUpClient(apiKey);
+const clickUp = new ClickUp(apiKey);
 
 export default clickUp;
