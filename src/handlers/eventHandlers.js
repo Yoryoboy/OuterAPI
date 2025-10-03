@@ -1,7 +1,10 @@
 import { validateValidStatus } from "../middlewares/validStatusValidator.js";
 import { handleEstimatedDeliveryDateUpdate } from "../controllers/customFieldController.js";
 import { validateList } from "../middlewares/listValidator.js";
-import { CCI_BAU_LIST } from "../config/listsDetails.js";
+import {
+  CCI_BAU_LIST,
+  CCI_PAYMENT_STATUS_LIST,
+} from "../config/listsDetails.js";
 import { identifyParentList } from "../middlewares/identifyParentList.js";
 import { handleTaskCreated } from "../controllers/taskCreatedController.js";
 import {
@@ -10,6 +13,7 @@ import {
 } from "../middlewares/validateHistoryField.js";
 import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { handleUpdatePodsCode } from "../controllers/podsCodeController.js";
+import { handlePaymentStatusUpdate } from "../controllers/paymentStatusController.js";
 
 /**
  * Configuration for event handlers with their middleware chains
@@ -33,6 +37,10 @@ export const eventHandlerConfig = {
   customField_JOB_TYPE_CCI: {
     middlewares: [validateList(CCI_BAU_LIST.id)],
     handler: handleUpdatePodsCode,
+  },
+  customField_PAYMENT_STATUS: {
+    middlewares: [validateList(CCI_PAYMENT_STATUS_LIST.id)],
+    handler: handlePaymentStatusUpdate,
   },
 };
 
