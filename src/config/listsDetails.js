@@ -49,3 +49,8 @@ export const TECHSERV_BAU_LIST = {
     name: "TechServ - BAU - BILLING CODES",
   },
 };
+
+export const CCI_PAYMENT_STATUS_LIST = {
+  id: "901412536173",
+  name: "CCI - Payment Status",
+};
