@@ -14,6 +14,11 @@ import {
 import { handleStatusChange } from "../controllers/statusChangeController.js";
 import { handleUpdatePodsCode } from "../controllers/podsCodeController.js";
 import { handlePaymentStatusUpdate } from "../controllers/paymentStatusController.js";
+import { handleHighSplitBillingAutomation } from "../controllers/highSplitBillingController.js";
+import { requireTaskUpdatedEvent } from "../middlewares/eventTypeValidator.js";
+import { validateCustomFieldHistory } from "../middlewares/customFieldHistoryValidator.js";
+import { validateHighSplitList } from "../middlewares/highSplitListMiddleware.js";
+import { HIGH_SPLIT_AUTOMATION_EVENT } from "../config/highSplitAutomationConfig.js";
 
 /**
  * Configuration for event handlers with their middleware chains
@@ -41,6 +46,14 @@ export const eventHandlerConfig = {
   customField_PAYMENT_STATUS: {
     middlewares: [validateList(CCI_PAYMENT_STATUS_LIST.id)],
     handler: handlePaymentStatusUpdate,
+  },
+  [HIGH_SPLIT_AUTOMATION_EVENT]: {
+    middlewares: [
+      requireTaskUpdatedEvent,
+      validateCustomFieldHistory,
+      validateHighSplitList,
+    ],
+    handler: handleHighSplitBillingAutomation,
   },
 };
 

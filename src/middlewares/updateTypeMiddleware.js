@@ -1,3 +1,8 @@
+import {
+  HIGH_SPLIT_AUTOMATION_EVENT,
+  HIGH_SPLIT_AUTOMATION_FIELD_IDS,
+} from "../config/highSplitAutomationConfig.js";
+
 export function identifyUpdateType(req, res, next) {
   try {
     if (req.body.history_items && req.body.history_items.length > 0) {
@@ -15,19 +20,27 @@ export function identifyUpdateType(req, res, next) {
         historyItem.field === "custom_field" &&
         historyItem.custom_field
       ) {
-        req.updateType = `customField_${historyItem.custom_field.name.replace(
+        const fieldId = historyItem.custom_field.id;
+        const normalizedFieldName = historyItem.custom_field.name.replace(
           /\s+/g,
           "_"
-        )}`;
+        );
+
+        req.updateType = `customField_${normalizedFieldName}`;
         req.listId = historyItem.parent_id;
         req.taskId = req.body.task_id;
         req.customFieldData = {
-          fieldId: historyItem.custom_field.id,
+          fieldId,
           fieldName: historyItem.custom_field.name,
           before: historyItem.before,
           after: historyItem.after,
           fieldType: historyItem.custom_field.type,
         };
+
+        if (HIGH_SPLIT_AUTOMATION_FIELD_IDS.has(fieldId)) {
+          req.updateType = HIGH_SPLIT_AUTOMATION_EVENT;
+          req.highSplitFieldId = fieldId;
+        }
       } else if (event === "taskCreated") {
         req.updateType = "taskCreated";
       }
