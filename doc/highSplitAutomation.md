@@ -1,7 +1,7 @@
 # High Split Billing Automation
 
 ## Event Flow
-- `/src/middlewares/updateTypeMiddleware.js` now tags every ClickUp `taskUpdated` event that changes one of the High Split billing custom fields with the synthetic `highSplitAutomation` update type. The middleware still stores the standard `req.customFieldData`, `req.taskId`, and `req.listId`.
+- `/src/middlewares/updateTypeMiddleware.js` now scans every `history_items` entry (not just the first one) so it tags any ClickUp `taskUpdated` event that touches one of the High Split billing custom fields with the synthetic `highSplitAutomation` update type. The middleware still stores the standard `req.customFieldData`, `req.taskId`, and `req.listId`.
 - `/src/handlers/eventHandlers.js` registers a single handler for that update type. The chain ensures the request is a `taskUpdated` event, contains a `custom_field` history item, and that the task belongs to the CCI High Split list before delegating to the controller.
 - `/src/controllers/highSplitBillingController.js` delegates the heavy lifting to the service and converts the service response into the HTTP response expected by the webhook route.
 
