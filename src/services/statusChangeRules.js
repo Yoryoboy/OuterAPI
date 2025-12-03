@@ -1,7 +1,7 @@
 // Centralized rules for status-driven actions
 // Each status maps to an array of actions to execute in order
 
-import { CCI_BAU_LIST } from "../config/listsDetails.js";
+import { CCI_BAU_LIST, CCI_HS_LIST } from "../config/listsDetails.js";
 
 export const STATUS_RULES = {
   "asbuilt ready for qc": [
@@ -12,6 +12,17 @@ export const STATUS_RULES = {
         description: "Update first asbuilt qc submission date 1",
         alwaysUpdate: false,
         dateSource: "historyItemDate",
+        listId: CCI_HS_LIST.id,
+      },
+    },
+    {
+      type: "updateCustomFieldByName",
+      params: {
+        fieldName: "asbuilt qc submission date",
+        description: "Update asbuilt qc submission date",
+        alwaysUpdate: true,
+        dateSource: "historyItemDate",
+        listId: CCI_HS_LIST.id,
       },
     },
   ],
