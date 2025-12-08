@@ -2,6 +2,8 @@ import axios from "axios";
 import { apiKey } from "../config/config.js";
 import { makeAxiosRequest } from "../utils/axiosHelpers.js";
 import clickUp from "../config/clickUp.js";
+import { sendEmail } from "./emailService.js";
+import { updateTask } from "../utils/clickUpApi.js";
 
 // Generic action handler: update a custom field by its display name
 async function updateCustomFieldByName(
@@ -95,6 +97,7 @@ async function updateCustomFieldByName(
 
 export const ACTION_HANDLERS = {
   updateCustomFieldByName,
+  validateTaskFields,
   // Future: sendEmail, callWebhook, addComment, etc.
 };
 
@@ -165,4 +168,96 @@ export async function setDateFieldNowIfEmptyForList(
   }
 }
 
+
+export async function validateTaskFields(taskData, params) {
+  console.log("=== VALIDATING TASK FIELDS ===");
+  const { validations, onFailure } = params;
+  const taskId = taskData.taskId;
+
+  // 1. Obtener la tarea completa con sus Custom Fields
+  const task = await clickUp.tasks.getTask(taskId);
+  const customFields = task.custom_fields;
+
+  let missingFields = [];
+
+  // 2. Ejecutar Validaciones
+  for (const validation of validations) {
+    const field = customFields.find(
+      (f) => f.name.toLowerCase() === validation.fieldName.toLowerCase()
+    );
+
+    let isValid = false;
+
+    if (field) {
+      // Lógica específica por tipo
+      if (validation.type === "number") {
+        // Verifica que no sea null, undefined o string vacío. Acepta 0.
+        isValid =
+          field.value !== null && field.value !== undefined && field.value !== "";
+      } else if (validation.type === "users") {
+        isValid = field.value && field.value.length > 0;
+      } else {
+        // Fallback para otros tipos
+        isValid = !!field.value;
+      }
+    }
+
+    if (!isValid) {
+      missingFields.push(validation.fieldName);
+    }
+  }
+
+  // 3. Si todo está bien, continuamos
+  if (missingFields.length === 0) {
+    console.log("Validation passed.");
+    return { ok: true };
+  }
+
+  // 4. MANEJO DE FALLO
+  console.log(`Validation failed. Missing: ${missingFields.join(", ")}`);
+
+  if (onFailure) {
+    // A. Revertir Estado
+    if (onFailure.targetStatus) {
+      console.log(`Reverting status to: ${onFailure.targetStatus}`);
+      await updateTask(taskId, { status: onFailure.targetStatus });
+    }
+
+    // B. Enviar Notificación
+    const recipients = [...(onFailure.staticRecipients || [])];
+
+    // Buscar emails dinámicos (ej. PREASBUILT QC BY)
+    if (onFailure.notifyUserFields) {
+      for (const userFieldName of onFailure.notifyUserFields) {
+        const userField = customFields.find((f) => f.name === userFieldName);
+        if (userField && userField.value && userField.value.length > 0) {
+          userField.value.forEach((u) => {
+            if (u.email) recipients.push(u.email);
+          });
+        }
+      }
+    }
+
+    if (recipients.length > 0) {
+      const subject = onFailure.emailSubject || `Error en Tarea: ${task.name}`;
+      const body = `
+            <p>La tarea <b>${task.name}</b> no pudo cambiar de estado.</p>
+            <p><b>Razón:</b> Los siguientes campos obligatorios están vacíos:</p>
+            <ul>${missingFields.map((f) => `<li>${f}</li>`).join("")}</ul>
+            <p>Por favor complete la información requerida.</p>
+        `;
+
+      // Evitar duplicados
+      const uniqueRecipients = [...new Set(recipients)];
+      await sendEmail(uniqueRecipients.join(", "), subject, body);
+    }
+  }
+
+  // IMPORTANTE: Retornamos stop: true para cancelar las siguientes reglas
+  // Retornamos ok: true porque el handler se ejecutó correctamente (tomó la decisión de validar y parar).
+  // Si devolvemos false, el controlador enviará un 500 a ClickUp y podría matar el webhook.
+  return { ok: true, stop: true, reason: "validation_failed" };
+}
+
 ACTION_HANDLERS.setDateFieldNowIfEmptyForList = setDateFieldNowIfEmptyForList;
+ACTION_HANDLERS.validateTaskFields = validateTaskFields;

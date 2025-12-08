@@ -61,6 +61,22 @@ export const STATUS_RULES = {
   ],
   "asbuilt sent": [
     {
+      type: "validateTaskFields",
+      params: {
+        validations: [
+          { fieldName: "PORCENTAJE ERROR ASBUILT", type: "number" },
+          { fieldName: "ASBUILT MILES", type: "number" },
+          { fieldName: "PREASBUILT QC BY", type: "users" },
+        ],
+        onFailure: {
+          targetStatus: "asbuilt in qc by irazu",
+          notifyUserFields: ["PREASBUILT QC BY"], // Campo dinámico del usuario
+          staticRecipients: ["jdiaz@irazutechnology.com", "93jad@gmail.com"], // Tus emails fijos
+          emailSubject: "Acción Requerida: Campos faltantes en Asbuilt para QC",
+        },
+      },
+    },
+    {
       type: "updateCustomFieldByName",
       params: {
         fieldName: "preasbuilt actual completion date ",
