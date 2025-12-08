@@ -4,6 +4,7 @@ import { makeAxiosRequest } from "../utils/axiosHelpers.js";
 import clickUp from "../config/clickUp.js";
 import { sendEmail } from "./emailService.js";
 import { updateTask } from "../utils/clickUpApi.js";
+import { getValidationFailureEmail } from "../templates/emailTemplates.js";
 
 // Generic action handler: update a custom field by its display name
 async function updateCustomFieldByName(
@@ -239,13 +240,10 @@ export async function validateTaskFields(taskData, params) {
     }
 
     if (recipients.length > 0) {
-      const subject = onFailure.emailSubject || `Error en Tarea: ${task.name}`;
-      const body = `
-            <p>La tarea <b>${task.name}</b> no pudo cambiar de estado.</p>
-            <p><b>Razón:</b> Los siguientes campos obligatorios están vacíos:</p>
-            <ul>${missingFields.map((f) => `<li>${f}</li>`).join("")}</ul>
-            <p>Por favor complete la información requerida.</p>
-        `;
+      const subject = onFailure.emailSubject || `⚠️ Acción Requerida: ${task.name}`;
+      
+      // Usar la plantilla HTML dinámica
+      const body = getValidationFailureEmail(task.name, taskId, missingFields);
 
       // Evitar duplicados
       const uniqueRecipients = [...new Set(recipients)];
