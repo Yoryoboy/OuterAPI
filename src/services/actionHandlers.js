@@ -6,7 +6,7 @@ import clickUp from "../config/clickUp.js";
 // Generic action handler: update a custom field by its display name
 async function updateCustomFieldByName(
   taskData,
-  { fieldName, description, alwaysUpdate, dateSource }
+  { fieldName, description, alwaysUpdate, dateSource, listId }
 ) {
   console.log(
     `=== ${String(description || "Update custom field").toUpperCase()} ===`
@@ -16,6 +16,17 @@ async function updateCustomFieldByName(
   if (!taskId) {
     console.error("Missing taskId in taskData");
     return { ok: false, reason: "missing_task_id" };
+  }
+
+  // Optional list validation: if listId is provided, enforce list constraint
+  if (listId) {
+    const parentListId = taskData?.historyItemParentId;
+    if (!parentListId || String(parentListId) !== String(listId)) {
+      console.log(
+        `Skipping action: parent list ${parentListId} does not match target ${listId}`
+      );
+      return { ok: true, skipped: true, reason: "list_mismatch" };
+    }
   }
 
   try {
