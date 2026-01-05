@@ -169,11 +169,26 @@ export async function setDateFieldNowIfEmptyForList(
   }
 }
 
-
 export async function validateTaskFields(taskData, params) {
   console.log("=== VALIDATING TASK FIELDS ===");
-  const { validations, onFailure } = params;
+  const { validations, onFailure, listId } = params;
   const taskId = taskData.taskId;
+
+  if (!taskId) {
+    console.error("Missing taskId in taskData");
+    return { ok: false, reason: "missing_task_id" };
+  }
+
+  // Optional list validation: if listId is provided, enforce list constraint
+  if (listId) {
+    const parentListId = taskData?.historyItemParentId;
+    if (!parentListId || String(parentListId) !== String(listId)) {
+      console.log(
+        `Skipping validation: parent list ${parentListId} does not match target ${listId}`
+      );
+      return { ok: true, skipped: true, reason: "list_mismatch" };
+    }
+  }
 
   // 1. Obtener la tarea completa con sus Custom Fields
   const task = await clickUp.tasks.getTask(taskId);
@@ -194,7 +209,9 @@ export async function validateTaskFields(taskData, params) {
       if (validation.type === "number") {
         // Verifica que no sea null, undefined o string vacío. Acepta 0.
         isValid =
-          field.value !== null && field.value !== undefined && field.value !== "";
+          field.value !== null &&
+          field.value !== undefined &&
+          field.value !== "";
       } else if (validation.type === "users") {
         isValid = field.value && field.value.length > 0;
       } else {
@@ -240,8 +257,9 @@ export async function validateTaskFields(taskData, params) {
     }
 
     if (recipients.length > 0) {
-      const subject = onFailure.emailSubject || `⚠️ Acción Requerida: ${task.name}`;
-      
+      const subject =
+        onFailure.emailSubject || `⚠️ Acción Requerida: ${task.name}`;
+
       // Usar la plantilla HTML dinámica
       const body = getValidationFailureEmail(task.name, taskId, missingFields);
 

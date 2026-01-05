@@ -52,6 +52,7 @@ export const STATUS_RULES = {
     {
       type: "validateTaskFields",
       params: {
+        listId: CCI_HS_LIST.id,
         validations: [
           { fieldName: "PORCENTAJE ERROR REDESIGN", type: "number" },
           { fieldName: "REDESIGN TIME", type: "number" },
@@ -84,6 +85,7 @@ export const STATUS_RULES = {
     {
       type: "validateTaskFields",
       params: {
+        listId: CCI_HS_LIST.id,
         validations: [
           { fieldName: "PORCENTAJE ERROR ASBUILT", type: "number" },
           { fieldName: "ASBUILT MILES", type: "number" },
@@ -114,6 +116,7 @@ export const STATUS_RULES = {
     {
       type: "validateTaskFields",
       params: {
+        listId: CCI_HS_LIST.id,
         validations: [
           { fieldName: "PORCENTAJE ERROR DISEÑO", type: "number" },
           { fieldName: "DESIGN MILES", type: "number" },
