@@ -2,11 +2,14 @@ import axios from "axios";
 import { apiKey } from "../config/config.js";
 import { makeAxiosRequest } from "../utils/axiosHelpers.js";
 import clickUp from "../config/clickUp.js";
+import { sendEmail } from "./emailService.js";
+import { updateTask } from "../utils/clickUpApi.js";
+import { getValidationFailureEmail } from "../templates/emailTemplates.js";
 
 // Generic action handler: update a custom field by its display name
 async function updateCustomFieldByName(
   taskData,
-  { fieldName, description, alwaysUpdate, dateSource }
+  { fieldName, description, alwaysUpdate, dateSource, listId }
 ) {
   console.log(
     `=== ${String(description || "Update custom field").toUpperCase()} ===`
@@ -16,6 +19,17 @@ async function updateCustomFieldByName(
   if (!taskId) {
     console.error("Missing taskId in taskData");
     return { ok: false, reason: "missing_task_id" };
+  }
+
+  // Optional list validation: if listId is provided, enforce list constraint
+  if (listId) {
+    const parentListId = taskData?.historyItemParentId;
+    if (!parentListId || String(parentListId) !== String(listId)) {
+      console.log(
+        `Skipping action: parent list ${parentListId} does not match target ${listId}`
+      );
+      return { ok: true, skipped: true, reason: "list_mismatch" };
+    }
   }
 
   try {
@@ -84,6 +98,7 @@ async function updateCustomFieldByName(
 
 export const ACTION_HANDLERS = {
   updateCustomFieldByName,
+  validateTaskFields,
   // Future: sendEmail, callWebhook, addComment, etc.
 };
 
@@ -154,4 +169,111 @@ export async function setDateFieldNowIfEmptyForList(
   }
 }
 
+export async function validateTaskFields(taskData, params) {
+  console.log("=== VALIDATING TASK FIELDS ===");
+  const { validations, onFailure, listId } = params;
+  const taskId = taskData.taskId;
+
+  if (!taskId) {
+    console.error("Missing taskId in taskData");
+    return { ok: false, reason: "missing_task_id" };
+  }
+
+  // Optional list validation: if listId is provided, enforce list constraint
+  if (listId) {
+    const parentListId = taskData?.historyItemParentId;
+    if (!parentListId || String(parentListId) !== String(listId)) {
+      console.log(
+        `Skipping validation: parent list ${parentListId} does not match target ${listId}`
+      );
+      return { ok: true, skipped: true, reason: "list_mismatch" };
+    }
+  }
+
+  // 1. Obtener la tarea completa con sus Custom Fields
+  const task = await clickUp.tasks.getTask(taskId);
+  const customFields = task.custom_fields;
+
+  let missingFields = [];
+
+  // 2. Ejecutar Validaciones
+  for (const validation of validations) {
+    const field = customFields.find(
+      (f) => f.name.toLowerCase() === validation.fieldName.toLowerCase()
+    );
+
+    let isValid = false;
+
+    if (field) {
+      // Lógica específica por tipo
+      if (validation.type === "number") {
+        // Verifica que no sea null, undefined o string vacío. Acepta 0.
+        isValid =
+          field.value !== null &&
+          field.value !== undefined &&
+          field.value !== "";
+      } else if (validation.type === "users") {
+        isValid = field.value && field.value.length > 0;
+      } else {
+        // Fallback para otros tipos
+        isValid = !!field.value;
+      }
+    }
+
+    if (!isValid) {
+      missingFields.push(validation.fieldName);
+    }
+  }
+
+  // 3. Si todo está bien, continuamos
+  if (missingFields.length === 0) {
+    console.log("Validation passed.");
+    return { ok: true };
+  }
+
+  // 4. MANEJO DE FALLO
+  console.log(`Validation failed. Missing: ${missingFields.join(", ")}`);
+
+  if (onFailure) {
+    // A. Revertir Estado
+    if (onFailure.targetStatus) {
+      console.log(`Reverting status to: ${onFailure.targetStatus}`);
+      await updateTask(taskId, { status: onFailure.targetStatus });
+    }
+
+    // B. Enviar Notificación
+    const recipients = [...(onFailure.staticRecipients || [])];
+
+    // Buscar emails dinámicos (ej. PREASBUILT QC BY)
+    if (onFailure.notifyUserFields) {
+      for (const userFieldName of onFailure.notifyUserFields) {
+        const userField = customFields.find((f) => f.name === userFieldName);
+        if (userField && userField.value && userField.value.length > 0) {
+          userField.value.forEach((u) => {
+            if (u.email) recipients.push(u.email);
+          });
+        }
+      }
+    }
+
+    if (recipients.length > 0) {
+      const subject =
+        onFailure.emailSubject || `⚠️ Acción Requerida: ${task.name}`;
+
+      // Usar la plantilla HTML dinámica
+      const body = getValidationFailureEmail(task.name, taskId, missingFields);
+
+      // Evitar duplicados
+      const uniqueRecipients = [...new Set(recipients)];
+      await sendEmail(uniqueRecipients.join(", "), subject, body);
+    }
+  }
+
+  // IMPORTANTE: Retornamos stop: true para cancelar las siguientes reglas
+  // Retornamos ok: true porque el handler se ejecutó correctamente (tomó la decisión de validar y parar).
+  // Si devolvemos false, el controlador enviará un 500 a ClickUp y podría matar el webhook.
+  return { ok: true, stop: true, reason: "validation_failed" };
+}
+
 ACTION_HANDLERS.setDateFieldNowIfEmptyForList = setDateFieldNowIfEmptyForList;
+ACTION_HANDLERS.validateTaskFields = validateTaskFields;

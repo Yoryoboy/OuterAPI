@@ -52,3 +52,45 @@ export const getNoCodesEmail = (id, name, date, users, codes) => `
     <p><strong>Irazu Technology</strong></p>
   </div>
 `;
+
+export const getValidationFailureEmail = (taskName, taskId, missingFields) => `
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 550px; width: 95%; margin: auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0px 4px 15px rgba(0,0,0,0.05); background-color: #ffffff;">
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: #d32f2f; margin: 0; font-size: 24px;">⛔ Acción Requerida</h2>
+        <p style="color: #666; font-size: 14px; margin-top: 5px;">Validación de Tarea Fallida</p>
+    </div>
+
+    <p style="color: #333; font-size: 16px; line-height: 1.5;">Hola,</p>
+    
+    <p style="color: #333; font-size: 16px; line-height: 1.5;">
+        La tarea <strong>"${taskName}"</strong> no pudo avanzar de estado debido a que faltan datos obligatorios.
+    </p>
+
+    <div style="background-color: #ffebee; border-left: 5px solid #d32f2f; padding: 15px; margin: 20px 0; border-radius: 4px;">
+        <p style="color: #d32f2f; font-weight: bold; margin: 0 0 10px 0;">⚠️ Campos faltantes:</p>
+        <ul style="margin: 0; padding-left: 20px; color: #b71c1c;">
+            ${missingFields.map((field) => `<li style="margin-bottom: 5px;">${field}</li>`).join("")}
+        </ul>
+    </div>
+
+    <p style="color: #333; font-size: 16px; line-height: 1.5;">
+        El estado de la tarea ha sido revertido automáticamente para permitir las correcciones. 
+        Por favor, complete estos campos y vuelva a intentar mover la tarea.
+    </p>
+
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+      <a href="https://app.clickup.com/t/${taskId}" 
+         style="background-color: #d32f2f; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; display: inline-block; transition: background-color 0.3s;">
+        🔗 Corregir Tarea en ClickUp
+      </a>
+    </div>
+
+    <hr style="border: 0; height: 1px; background: #eee; margin: 25px 0;">
+
+    <p style="color: #888; font-size: 12px; text-align: center;">
+        Irazu Technology Notification System<br>
+        Este es un mensaje automático, por favor no responder a este correo.
+    </p>
+  </div>
+`;

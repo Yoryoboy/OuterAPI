@@ -50,6 +50,28 @@ export const STATUS_RULES = {
   ],
   "redesign sent": [
     {
+      type: "validateTaskFields",
+      params: {
+        listId: CCI_HS_LIST.id,
+        validations: [
+          { fieldName: "PORCENTAJE ERROR REDESIGN", type: "number" },
+          { fieldName: "REDESIGN TIME", type: "number" },
+          { fieldName: "TIME SPENT BY VENDOR", type: "number" },
+          { fieldName: "REDESIGN QC BY", type: "users" },
+        ],
+        onFailure: {
+          targetStatus: "redesign in qc by irazu",
+          notifyUserFields: ["REDESIGN QC BY"], // Campo dinámico del usuario
+          staticRecipients: [
+            "jdiaz@irazutechnology.com",
+            "dgonzalez@irazutechnology.com",
+          ], // Tus emails fijos
+          emailSubject:
+            "Acción Requerida: Campos faltantes en Redesign para QC",
+        },
+      },
+    },
+    {
       type: "updateCustomFieldByName",
       params: {
         fieldName: "redesign actual completion date",
@@ -61,6 +83,26 @@ export const STATUS_RULES = {
   ],
   "asbuilt sent": [
     {
+      type: "validateTaskFields",
+      params: {
+        listId: CCI_HS_LIST.id,
+        validations: [
+          { fieldName: "PORCENTAJE ERROR ASBUILT", type: "number" },
+          { fieldName: "ASBUILT MILES", type: "number" },
+          { fieldName: "PREASBUILT QC BY", type: "users" },
+        ],
+        onFailure: {
+          targetStatus: "asbuilt in qc by irazu",
+          notifyUserFields: ["PREASBUILT QC BY"], // Campo dinámico del usuario
+          staticRecipients: [
+            "jdiaz@irazutechnology.com",
+            "dgonzalez@irazutechnology.com",
+          ], // Tus emails fijos
+          emailSubject: "Acción Requerida: Campos faltantes en Asbuilt para QC",
+        },
+      },
+    },
+    {
       type: "updateCustomFieldByName",
       params: {
         fieldName: "preasbuilt actual completion date ",
@@ -71,6 +113,26 @@ export const STATUS_RULES = {
     },
   ],
   sent: [
+    {
+      type: "validateTaskFields",
+      params: {
+        listId: CCI_HS_LIST.id,
+        validations: [
+          { fieldName: "PORCENTAJE ERROR DISEÑO", type: "number" },
+          { fieldName: "DESIGN MILES", type: "number" },
+          { fieldName: "DESIGN QC BY", type: "users" },
+        ],
+        onFailure: {
+          targetStatus: "design in qc by irazu",
+          notifyUserFields: ["DESIGN QC BY"], // Campo dinámico del usuario
+          staticRecipients: [
+            "jdiaz@irazutechnology.com",
+            "dgonzalez@irazutechnology.com",
+          ], // Tus emails fijos
+          emailSubject: "Acción Requerida: Campos faltantes en Design para QC",
+        },
+      },
+    },
     {
       type: "updateCustomFieldByName",
       params: {
