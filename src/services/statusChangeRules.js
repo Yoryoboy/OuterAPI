@@ -65,6 +65,7 @@ export const STATUS_RULES = {
           staticRecipients: [
             "jdiaz@irazutechnology.com",
             "dgonzalez@irazutechnology.com",
+            "amarrero@irazutechnology.com",
           ], // Tus emails fijos
           emailSubject:
             "Acción Requerida: Campos faltantes en Redesign para QC",
@@ -97,6 +98,7 @@ export const STATUS_RULES = {
           staticRecipients: [
             "jdiaz@irazutechnology.com",
             "dgonzalez@irazutechnology.com",
+            "amarrero@irazutechnology.com",
           ], // Tus emails fijos
           emailSubject: "Acción Requerida: Campos faltantes en Asbuilt para QC",
         },
@@ -128,6 +130,7 @@ export const STATUS_RULES = {
           staticRecipients: [
             "jdiaz@irazutechnology.com",
             "dgonzalez@irazutechnology.com",
+            "amarrero@irazutechnology.com",
           ], // Tus emails fijos
           emailSubject: "Acción Requerida: Campos faltantes en Design para QC",
         },

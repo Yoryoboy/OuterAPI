@@ -37,20 +37,24 @@ OuterAPI follows a modular architecture with:
 The application implements a sophisticated webhook handling system that efficiently processes ClickUp events:
 
 #### Single Webhook Subscription with Granular Handling
+
 - Rather than subscribing to multiple specific webhook events, the system subscribes only to the broader `taskUpdated` event
 - Uses middleware to analyze and route different types of updates to specialized handlers
 
 #### Dynamic Event Routing System
+
 - The `identifyUpdateType` middleware examines webhook payloads to determine specific update types
 - For status changes: sets `req.updateType = "taskStatusUpdated"`
 - For custom fields: sets `req.updateType = "customField_FIELD_NAME"`
 
 #### Request Flow
+
 ```
 Webhook → identifyUpdateType → eventRouter → executeEventHandler → Specific Handler
 ```
 
 #### Key Benefits
+
 - **Scalability**: Easily add new event handlers without modifying routes
 - **Maintainability**: Clean separation of concerns with dedicated handlers for each event type
 - **Flexibility**: Custom middleware chains for each event type
@@ -131,6 +135,47 @@ npm run dev
 - Currently handles:
   - `taskStatusUpdated`: Processes status changes with validation
   - `customField_ESTIMATED_DELIVERY_DATE`: Updates task due dates to the next business day after the estimated delivery date
+
+#### POST /auth/token
+
+- Description: Authentication endpoint that obtains access tokens from the external authentication service.
+- Forwards credentials to `https://danella-x.com/api/auth/token` and returns the token response.
+- **Request Body**:
+  ```json
+  {
+    "apiKey": "string",
+    "userID": number,
+    "employeeID": number,
+    "name": "string"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "access_token": "eyJhbGciOiJIU...",
+    "token_type": "Bearer",
+    "expires_in": 14400
+  }
+  ```
+- **CORS Configuration**: Allows requests from:
+  - `https://irazu-tools.onrender.com`
+  - `http://localhost:5173`
+- **Error Handling**:
+  - `400`: Missing or invalid required fields
+  - `503`: Authentication service unavailable
+  - `504`: Request timeout
+  - `500`: Internal server error
+- **Example Request**:
+  ```bash
+  curl -X POST http://localhost:3000/auth/token \
+    -H "Content-Type: application/json" \
+    -d '{
+      "apiKey": "your-api-key",
+      "userID": 123,
+      "employeeID": 456,
+      "name": "John Doe"
+    }'
+  ```
 
 ## Key Implemented Features
 
